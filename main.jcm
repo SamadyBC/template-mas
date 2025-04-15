@@ -20,6 +20,17 @@ mas main {
     agent cortina: cortina.asl
     agent lampada: lampada.asl
     agent fechadura: fechadura.asl
+    agent alice: ac_Controller.asl 
+    {
+      beliefs: valor(cerveja, 10)
+      //goals: dizer(preco(cerveja,10), bob)
+    }
+    agent bob: ac_Controller.asl{
+      goals: //dizer(preco(arroz,35), alice)
+      //pedir_valor(cerveja, alice)
+      //dizer(ola, alice)
+
+    }
 
 
     workspace w {
