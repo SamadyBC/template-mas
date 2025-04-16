@@ -11,7 +11,7 @@
 
 mas main {
 
-    agent bob: sample_agent.asl {
+    agent bob2: sample_agent.asl {
       focus: w.c1 
     }
 
@@ -20,15 +20,18 @@ mas main {
     agent cortina: cortina.asl
     agent lampada: lampada.asl
     agent fechadura: fechadura.asl
-    agent alice: ac_Controller.asl 
+    agent alice: comunicacao.asl 
     {
       beliefs: valor(cerveja, 10)
       //goals: dizer(preco(cerveja,10), bob)
     }
-    agent bob: ac_Controller.asl{
+    agent bob: comunicacao.asl {
       goals: //dizer(preco(arroz,35), alice)
       //pedir_valor(cerveja, alice)
       //dizer(ola, alice)
+
+    }
+    agent Ar_Condicionado: ac_Controller.asl {
 
     }
 
