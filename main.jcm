@@ -11,32 +11,25 @@
 
 mas main {
 
-    agent bob2: sample_agent.asl {
-      focus: w.c1 
-    }
-
-    agent ar_condicionado: ar_condicionado.asl
-    agent camera: camera.asl
-    agent cortina: cortina.asl
-    agent lampada: lampada.asl
-    agent fechadura: fechadura.asl
-    agent alice: comunicacao.asl 
-    {
+    /*agent alice: comunicacao.asl {
       beliefs: valor(cerveja, 10)
       //goals: dizer(preco(cerveja,10), bob)
     }
+
     agent bob: comunicacao.asl {
       goals: //dizer(preco(arroz,35), alice)
       //pedir_valor(cerveja, alice)
       //dizer(ola, alice)
 
+    }*/
+
+    agent sensor_temp: sensor.asl{
+      beliefs: temperature(33)
+      goals: medir_temperatura
     }
-    agent Ar_Condicionado: ac_Controller.asl {
 
-    }
-
-
-    workspace w {
-      artifact c1: example.Counter(3) 
+    agent atuador_temp: temperature_Controller.asl {
+      beliefs: temp_ideal("Morango", 18.5), temp_ideal("Alface", 20), producao("Morango", "Estufa1"), temperatura(15)
+      goals: regular_temperatura("Estufa1")
     }
 }

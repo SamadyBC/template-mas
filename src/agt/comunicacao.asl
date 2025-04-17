@@ -1,6 +1,7 @@
 +consultar(Receiver, Produto)
     <- .send(Receiver, askOne, valor(Produto, X), A);
     .print(A).
+    
 +valor(Produto, X) <- .print("Recebi a informacao ", valor(Produto, X))
 
 +!dizer(X,S) <- .send(S, achieve, X).
