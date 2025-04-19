@@ -24,12 +24,12 @@ mas main {
     }*/
 
     agent sensor_temp: sensor.asl{
-      beliefs: temperature(33)
+      beliefs: temp_atual(33)
       goals: medir_temperatura
     }
 
     agent atuador_temp: temperature_Controller.asl {
-      beliefs: temp_ideal("Morango", 18.5), temp_ideal("Alface", 20), producao("Morango", "Estufa1"), temperatura(15)
+      beliefs: temp_ideal("Morango", 19), temp_ideal("Alface", 21), producao("Morango", "Estufa1"), producao("Alface", "Estufa2"), temp_atual(29)
       goals: regular_temperatura("Estufa1")
     }
 }

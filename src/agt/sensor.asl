@@ -1,2 +1,2 @@
 +!medir_temperatura
-    <- .print("Temp 25").
+    <- .print("Temperatura Medida: ", 25).
