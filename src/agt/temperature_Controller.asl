@@ -1,5 +1,5 @@
 /* Initial beliefs, rules and inferences */
-
+// Alterar variaveis: C -> Graus, X -> Cultivo
 reduzir_temperatura (C, X) :- temp_atual(Temp_Atual) & temp_ideal(X, Temp_Ideal) & Temp_Atual > Temp_Ideal & C = Temp_Atual - Temp_Ideal.
 aumentar_temperatura (C, X) :- temp_atual(Temp_Atual) & temp_ideal(X, Temp_Ideal) & Temp_Atual < Temp_Ideal & C = Temp_Ideal - Temp_Atual.
 temperatura_estavel(C, X) :- temp_atual(Temp_Atual) & temp_ideal(X, Temp_Ideal) & Temp_Atual == Temp_Ideal & C = Temp_Ideal.

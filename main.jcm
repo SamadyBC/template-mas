@@ -21,7 +21,7 @@ mas main {
       //pedir_valor(cerveja, alice)
       //dizer(ola, alice)
 
-    }*/
+    }
 
     agent sensor_temp: sensor.asl{
       beliefs: temp_atual(33)
@@ -31,5 +31,26 @@ mas main {
     agent atuador_temp: temperature_Controller.asl {
       beliefs: temp_ideal("Morango", 19), temp_ideal("Alface", 21), producao("Morango", "Estufa1"), producao("Alface", "Estufa2"), temp_atual(29)
       goals: regular_temperatura("Estufa1")
+    }*/
+
+    agent brasileiro: emissor.asl {
+      beliefs: idioma("Portugues"), cumprimento("Portugues", "Ola"), learn("portuguese")
+      goals: comunicar
+    }
+
+    agent ingles: receptor.asl {
+      beliefs: idioma("Ingles"), cumprimento("Ingles", "Hello")
+    }
+
+    agent espanhol: receptor.asl {
+      beliefs: idioma("Espanhol"), cumprimento("Espanhol", "Holla")
+    }
+
+    agent alemao: receptor.asl {
+      beliefs: idioma("Alemao"), cumprimento("Alemao", "Hallo")
+    }
+
+    agent italiano: receptor.asl {
+      beliefs: idioma("Italiano"), cumprimento("Italiano", "Ciao")
     }
 }
