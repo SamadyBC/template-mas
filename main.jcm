@@ -34,7 +34,7 @@ mas main {
     }*/
 
     agent brasileiro: emissor.asl {
-      beliefs: idioma("Portugues"), cumprimento("Portugues", "Ola"), learn("portuguese")
+      beliefs: idioma("Portugues"), cumprimento("Portugues", "Ola"), learn("portuguese", "Ola")
       goals: comunicar
     }
 
