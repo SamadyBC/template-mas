@@ -23,7 +23,7 @@ mas main {
 
     }
 
-    agent sensor_temp: sensor.asl{
+    agent sensor_temp: temperature_Sensor.asl{
       beliefs: temp_atual(33)
       goals: medir_temperatura
     }
