@@ -31,7 +31,7 @@ mas main {
     agent atuador_temp: temperature_Controller.asl {
       beliefs: temp_ideal("Morango", 19), temp_ideal("Alface", 21), producao("Morango", "Estufa1"), producao("Alface", "Estufa2"), temp_atual(29)
       goals: regular_temperatura("Estufa1")
-    }*/
+    }
 
     agent brasileiro: emissor.asl {
       beliefs: idioma("Portugues"), cumprimento("Portugues", "Ola"), learn("portuguese", "Ola")
@@ -52,5 +52,27 @@ mas main {
 
     agent italiano: receptor.asl {
       beliefs: idioma("Italiano"), cumprimento("Italiano", "Ciao")
+    } */
+
+    agent alison: leiloeiro.asl{
+    goals: anunciar_tarefa(tarefa1,40000), anunciar_tarefa(tarefa2,40000), anunciar_tarefa(tarefa3,40000)
+    }
+
+    agent bider1: bider.asl{
+      beliefs: bid_minimo(20000,tarefa1), 
+               bid_minimo(20000,tarefa2),
+               bid_minimo(20000,tarefa3),
+               decremento(2000,tarefa1),
+               decremento(2000,tarefa2),
+               decremento(2000,tarefa3),
+    }
+  
+    agent bider2: bider.asl{
+      beliefs: bid_minimo(15000,tarefa1), 
+               bid_minimo(15000,tarefa2),
+               bid_minimo(15000,tarefa3),
+               decremento(1000,tarefa1),
+               decremento(1000,tarefa2),
+               decremento(1000,tarefa3),
     }
 }
