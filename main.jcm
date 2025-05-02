@@ -55,10 +55,10 @@ mas main {
     } */
 
     agent alison: leiloeiro.asl{
-    goals: anunciar_tarefa(tarefa1,40000), anunciar_tarefa(tarefa2,40000), anunciar_tarefa(tarefa3,40000)
+    goals: anunciar_tarefa(tarefa1,20000), anunciar_tarefa(tarefa2,20000), anunciar_tarefa(tarefa3,20000)
     }
 
-    agent bider1: bider.asl{
+    /*agent bider1: bider.asl{
       beliefs: bid_minimo(20000,tarefa1), 
                bid_minimo(20000,tarefa2),
                bid_minimo(20000,tarefa3),
@@ -75,4 +75,34 @@ mas main {
                decremento(1000,tarefa2),
                decremento(1000,tarefa3),
     }
+
+    agent bider_estrategico: claudeBider.asl {
+    beliefs: valor_minimo(5000),
+             decremento_padrao(1000),
+             decremento_agressivo(2000),
+             min_total(20000),
+             soma_atual(0)
+    }*/
+
+    agent bider_conservador: gptBider.asl {
+    beliefs:  bid_minimo(8000, tarefa1),
+      bid_minimo(8000, tarefa2),
+      bid_minimo(8000, tarefa3),
+      decremento(5000, tarefa1),
+      decremento(5000, tarefa2),
+      decremento(5000, tarefa3),
+      min_total(20000),
+      soma_atual(0)
+    /*goals: checar_soma_final,*/
+    }
+    
+    agent bider_chines: deepseekBider.asl {
+    beliefs: min_total(20000),
+      decremento_padrao(4000), // Pode ajustar conforme a estratégia
+      agressividade(3) ,        // Mais agressivo em leilões competitivos
+      soma_atual(0)
+    }
+    
+
+
 }
