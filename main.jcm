@@ -55,7 +55,7 @@ mas main {
     } */
 
     agent alison: leiloeiro.asl{
-    goals: anunciar_tarefa(tarefa1,20000), anunciar_tarefa(tarefa2,20000), anunciar_tarefa(tarefa3,20000)
+    goals: anunciar_tarefa(tarefa1,30000), anunciar_tarefa(tarefa2,30000), anunciar_tarefa(tarefa3,30000)
     }
 
     /*agent bider1: bider.asl{
