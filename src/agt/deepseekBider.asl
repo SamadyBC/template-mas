@@ -11,7 +11,7 @@
   <- .print("Recebi anuncio da tarefa ", T, " com valor máximo de ", MaxVal);
     ?decremento_padrao(D);
     PrimeiraOferta = MaxVal - D;
-    .print("Vou iniciar oferta para ", T, " em ", PrimeiraOferta, " (decremento de ", D, ")");
+    //.print("Vou iniciar oferta para ", T, " em ", PrimeiraOferta, " (decremento de ", D, ")");
     .broadcast(tell, oferta(T, PrimeiraOferta)).
 
 // 2. Tratamento de ofertas concorrentes
@@ -19,10 +19,10 @@
   <- ?min_total(MinTotal);
      ?soma_atual(Soma);
      ?decremento_padrao(D);
-     .print("Analisando oferta de ", B, " (", Val, ") para ", T);
+     //.print("Analisando oferta de ", B, " (", Val, ") para ", T);
      if (Soma < MinTotal) {
        NovaOferta = Val - D;
-       .print("Vou cobrir a oferta de ", Val, " com ", Val-D, " para a tarefa ", T);
+       //.print("Vou cobrir a oferta de ", Val, " com ", Val-D, " para a tarefa ", T);
        .wait(200);
        .broadcast(tell, oferta(T, NovaOferta));
      }.
