@@ -7,6 +7,7 @@
        .print("Vou iniciar oferta para ", T, " em ", PrimeiraOferta, " (decremento de ", D, ")");
        .broadcast(tell, oferta(T, PrimeiraOferta));
        +meu_lance(T, PrimeiraOferta);
+       !atualiza_soma;
        -decremento(D,T);          // remove o decremento inicial (poderia ser opcional)
        +decremento(3000,T).       // passa a usar decremento de 1000
 
@@ -20,7 +21,8 @@
        .wait(200);
        .broadcast(tell, oferta(T, NovaOferta));
        -meu_lance(T, _); // remove lance anterior
-       +meu_lance(T, NovaOferta).
+       +meu_lance(T, NovaOferta);
+       !atualiza_soma.
 
 
 +oferta(T, Val): meu_lance(T, MeuUltimo) & bid_minimo(Min, T) & decremento(D, T) & (Val < MeuUltimo) & (Val - D < Min) // Ao inves de sair da disputa unicamente, verificar margem e realizar lance limite baseado na margem 
@@ -96,6 +98,19 @@
      +decremento(2000, T);
      .print("Ajustei decremento da tarefa ", T, " para 2000 (agressividade baixa, ", N, " concorrente)").
 
++!atualiza_soma
+   <- .findall(V, meu_lance(_, V), L);
+      !soma_lista(L, S);
+      -soma_atual(_);
+      +soma_atual(S).
+
+// Dispara o controle assim que soma_atual mudar
++soma_atual(S) : min_total(Min) & S >= Min
+   <- .print("A soma dos lances realizados é (", S, ") esta acima da cota mínima (", Min, ")").
+
++soma_atual(S) : min_total(Min) & S < Min
+   <- .print("A soma dos lances realizados é ", S, ". esta abaixo da cota mínima (", Min, ")").
+
 
 // Caso base: lista vazia
 +!soma_lista([], 0).
@@ -121,5 +136,5 @@ Verificar menores valores ofertados em cada tarefa e adicionar a base de crencas
 Verificar o valor ofertado por cada um dos agentes em cada uma das suas tarefas e somar para tomar decisoes - DONE - baseado na soma decidir encerrar os meus lances
 Quando o valor esta abaixo do meu minimo realizar a ultima oferta sendo o valor minimo previsto - 
 Verificar calculos para determinar qual o valor que deve ser oferecido para cumprir os requisitos. - Isso deve levar em consideracao a agressividade dos concorrentes.
-Determinar decrescimo de maneira dinamica atraves de calculos - 
+Determinar decrescimo de maneira dinamica atraves de calculos - DONE
 */
