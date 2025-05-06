@@ -26,7 +26,8 @@
 
 
 +oferta(T, Val): meu_lance(T, MeuUltimo) & bid_minimo(Min, T) & decremento(D, T) & (Val < MeuUltimo) & (Val - D < Min) // Ao inves de sair da disputa unicamente, verificar margem e realizar lance limite baseado na margem 
-    <- !registrar_menor_oferta(Bider, T, Val);  
+    <- !registrar_menor_oferta(Bider, T, Val); 
+    !ajustar_bid_minimo(T); 
     .print("Vou ficar de fora da tarefa ", T, " pois o valor já está em ", Val, " e meu mínimo é ", Min, ".").
 
 // Primeiro registro de oferta para esse agente-tarefa
@@ -103,6 +104,25 @@
       !soma_lista(L, S);
       -soma_atual(_);
       +soma_atual(S).
+
+// Caso em que compensa ajustar
++!ajustar_bid_minimo(T) : soma_atual(S) & min_total(Min) & decremento(D, T) & menor_oferta(Outro, T, Val) & meu_lance(T, MeuLance) & S > Min & ( MeuLance - Val <= (S - (Min + D)))
+<- Novo_Lance = Val - D;
+   -bid_minimo(_, T);
+   +bid_minimo(Novo_Lance, T);
+   .print("Ajustei o bid_minimo da tarefa ", T, " para: ", Novo_Lance, " visando atingir a meta exata!");
+   !lance_final(T).
+
+// Caso em que não compensa ajustar
++!ajustar_bid_minimo(T) : soma_atual(S) & min_total(Min) & decremento(D, T) & menor_oferta(Outro, T, Val) & (Val > (S - (Min + D)))
+<- .print("NÃO ajustei o bid_minimo de ", T, ". Oferta não permite bater a meta precisa.").
+
++!lance_final(T) : bid_minimo(Min, T)
+  <- .print("Enviando lance final de ", Min, " na tarefa ", T, " para tentar fechar a meta!");
+     .broadcast(tell, oferta(T, Min));
+     -meu_lance(T, _);
+     +meu_lance(T, Min);
+     !atualiza_soma.
 
 // Dispara o controle assim que soma_atual mudar
 +soma_atual(S) : min_total(Min) & S >= Min
