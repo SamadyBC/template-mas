@@ -3,8 +3,8 @@
 // Reage ao anúncio de tarefa
 +tarefa(T, MaxVal): decremento(D,T)
     <- PrimeiraOferta = MaxVal - D;
-       .print("Recebi anuncio da tarefa ", T, " com valor máximo de ", MaxVal);
-       .print("Vou iniciar oferta para ", T, " em ", PrimeiraOferta, " (decremento de ", D, ")");
+       //.print("Recebi anuncio da tarefa ", T, " com valor máximo de ", MaxVal);
+       //.print("Vou iniciar oferta para ", T, " em ", PrimeiraOferta, " (decremento de ", D, ")");
        .broadcast(tell, oferta(T, PrimeiraOferta));
        +meu_lance(T, PrimeiraOferta);
        !atualiza_soma;
@@ -14,7 +14,7 @@
 // Reage apenas a ofertas melhores (menores que a minha)
 +oferta(T, Val)[source(Bider)]: meu_lance(T, MeuUltimo) & bid_minimo(Min, T) & decremento(D, T) & (Val < MeuUltimo) & (Val - D >= Min)
     <- NovaOferta = Val - D;
-       .print("Concorrente ofertou ", Val, " MENOR que o meu lance (", MeuUltimo, ") na tarefa ", T, ". Cobrindo com ", NovaOferta);
+       //.print("Concorrente ofertou ", Val, " MENOR que o meu lance (", MeuUltimo, ") na tarefa ", T, ". Cobrindo com ", NovaOferta);
        !registrar_menor_oferta(Bider, T, Val);
        !incrementa_agressividade(T);
        !ajusta_decremento(T);
@@ -26,52 +26,53 @@
 
 
 +oferta(T, Val): meu_lance(T, MeuUltimo) & bid_minimo(Min, T) & decremento(D, T) & (Val < MeuUltimo) & (Val - D < Min) // Ao inves de sair da disputa unicamente, verificar margem e realizar lance limite baseado na margem 
-    <- !registrar_menor_oferta(Bider, T, Val); 
-    !ajustar_bid_minimo(T); 
-    .print("Vou ficar de fora da tarefa ", T, " pois o valor já está em ", Val, " e meu mínimo é ", Min, ".").
+    <- !registrar_menor_oferta(Bider, T, Val);
+    //!verificar_ajuste_bid_min(T);
+    !ajustar_bid_minimo(T). 
+    //.print("Vou ficar de fora da tarefa ", T, " pois o valor já está em ", Val, " e meu mínimo é ", Min, ".").
 
 // Primeiro registro de oferta para esse agente-tarefa
 +!registrar_menor_oferta(Bider, T, Val) : not menor_oferta(Bider, T, _)
     <- +menor_oferta(Bider, T, Val);
-       .print("Registrei primeira oferta de ", Bider, " para ", T, ": ", Val);
+       //.print("Registrei primeira oferta de ", Bider, " para ", T, ": ", Val);
        !verifica_concorrentes_20k(Bider).
 
 // Atualiza oferta se for menor que a anterior
 +!registrar_menor_oferta(Bider, T, Val) : menor_oferta(Bider, T, VOld) & (Val < VOld)
     <- -menor_oferta(Bider, T, VOld);
        +menor_oferta(Bider, T, Val);
-       .print("Atualizei menor oferta de ", Bider, " para ", T, ": ", Val);
+       //.print("Atualizei menor oferta de ", Bider, " para ", T, ": ", Val);
        !verifica_concorrentes_20k(Bider).
 
-// Ignora ofertas não menores - Esse codigo pode ser removido
+/* Ignora ofertas não menores - Esse codigo pode ser removido
 +!registrar_menor_oferta(Bider, T, Val) : menor_oferta(Bider, T, VOld) & (Val >= VOld)
     <- .print("Oferta de ", Bider, " para ", T, " (", Val, ") NÃO é menor que seu menor registro (", VOld, ")").
-
+*/
 +!verifica_concorrentes_20k(Bider)
   <- .findall(Val, menor_oferta(Bider, _, Val), Lances);
      !soma_lista(Lances, Soma);
      !verifica_soma_bider(Bider, Soma).
 
 +!verifica_soma_bider(Bider, Soma) : soma_bider(Bider, S) & Soma >= 20000
-  <- .print("Teste ", Bider, ": ", Soma);
-     .print("O concorrente ", Bider, " já ofertou 20k ou mais nas três tarefas!");
+  <- //.print("Teste ", Bider, ": ", Soma);
+     //.print("O concorrente ", Bider, " já ofertou 20k ou mais nas três tarefas!");
      -soma_bider(Bider, _);
      +soma_bider(Bider, Soma).
 
 +!verifica_soma_bider(Bider, Soma) : not soma_bider(Bider, S) & Soma >= 20000
-  <- .print("Primeira Execucao", Bider, ": ", Soma);
-     .print("O concorrente ", Bider, " já ofertou 20k ou mais nas três tarefas!");
+  <- //.print("Primeira Execucao", Bider, ": ", Soma);
+     //.print("O concorrente ", Bider, " já ofertou 20k ou mais nas três tarefas!");
      +soma_bider(Bider, Soma).
 
 +!verifica_soma_bider(Bider, Soma) : soma_bider(Bider, S) & Soma < 20000
-  <- .print("Teste ", Bider, ": ", Soma);
-     .print("O concorrente ", Bider, " ofertou menos que 20k nas três tarefas.");
+  <- //.print("Teste ", Bider, ": ", Soma);
+     //.print("O concorrente ", Bider, " ofertou menos que 20k nas três tarefas.");
      -soma_bider(Bider, _);
      +soma_bider(Bider, Soma).
 
 +!verifica_soma_bider(Bider, Soma) : not soma_bider(Bider, S) & Soma < 20000
-  <- .print("Primeira Execucao", Bider, ": ", Soma);
-     .print("O concorrente ", Bider, " ofertou menos que 20k nas três tarefas.").
+  <- //.print("Primeira Execucao", Bider, ": ", Soma);
+     //.print("O concorrente ", Bider, " ofertou menos que 20k nas três tarefas.").
      +soma_bider(Bider, Soma).
 
 +!incrementa_agressividade(T)
@@ -86,18 +87,15 @@
 
 +!ajusta_decremento(T) : agressividade_concorrencia(T, N) & N >= 3
   <- -decremento(_, T);
-     +decremento(500, T);
-     .print("Ajustei decremento da tarefa ", T, " para 500 (agressividade alta, ", N, " concorrentes)").
+     +decremento(500, T).
 
 +!ajusta_decremento(T) : agressividade_concorrencia(T, N) & N == 2
   <- -decremento(_, T);
-     +decremento(1000, T);
-     .print("Ajustei decremento da tarefa ", T, " para 1000 (agressividade média, ", N, " concorrentes)").
+     +decremento(1000, T).
 
 +!ajusta_decremento(T) : agressividade_concorrencia(T, N) & N <= 1
   <- -decremento(_, T);
-     +decremento(2000, T);
-     .print("Ajustei decremento da tarefa ", T, " para 2000 (agressividade baixa, ", N, " concorrente)").
+     +decremento(2000, T).
 
 +!atualiza_soma
    <- .findall(V, meu_lance(_, V), L);
@@ -110,7 +108,7 @@
 <- Novo_Lance = Val - D;
    -bid_minimo(_, T);
    +bid_minimo(Novo_Lance, T);
-   .print("Ajustei o bid_minimo da tarefa ", T, " para: ", Novo_Lance, " visando atingir a meta exata!");
+   //.print("Ajustei o bid_minimo da tarefa ", T, " para: ", Novo_Lance, " visando atingir a meta exata!");
    !lance_final(T).
 
 // Caso em que não compensa ajustar
@@ -118,19 +116,19 @@
 <- .print("NÃO ajustei o bid_minimo de ", T, ". Oferta não permite bater a meta precisa.").
 
 +!lance_final(T) : bid_minimo(Min, T)
-  <- .print("Enviando lance final de ", Min, " na tarefa ", T, " para tentar fechar a meta!");
+  <- //.print("Enviando lance final de ", Min, " na tarefa ", T, " para tentar fechar a meta!");
      .broadcast(tell, oferta(T, Min));
      -meu_lance(T, _);
      +meu_lance(T, Min);
      !atualiza_soma.
 
-// Dispara o controle assim que soma_atual mudar
+/* Dispara o controle assim que soma_atual mudar
 +soma_atual(S) : min_total(Min) & S >= Min
    <- .print("A soma dos lances realizados é (", S, ") esta acima da cota mínima (", Min, ")").
 
 +soma_atual(S) : min_total(Min) & S < Min
    <- .print("A soma dos lances realizados é ", S, ". esta abaixo da cota mínima (", Min, ")").
-
+*/
 
 // Caso base: lista vazia
 +!soma_lista([], 0).

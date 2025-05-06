@@ -65,8 +65,8 @@ mas main {
                decremento(2000,tarefa1),
                decremento(2000,tarefa2),
                decremento(2000,tarefa3),
-    }
-  
+    }*/
+  /*
     agent bider2: bider.asl{
       beliefs: bid_minimo(15000,tarefa1), 
                bid_minimo(15000,tarefa2),
@@ -74,8 +74,9 @@ mas main {
                decremento(1000,tarefa1),
                decremento(1000,tarefa2),
                decremento(1000,tarefa3),
-    }
+    }*/
 
+    /*
     agent bider_estrategico: claudeBider.asl {
     beliefs: valor_minimo(5000),
              decremento_padrao(1000),
@@ -85,9 +86,9 @@ mas main {
     }*/
 
     agent bider_conservador: gptBider.asl {
-    beliefs:  bid_minimo(8000, tarefa1),
-      bid_minimo(8000, tarefa2),
-      bid_minimo(8000, tarefa3),
+    beliefs:  bid_minimo(15000, tarefa1),
+      bid_minimo(15000, tarefa2),
+      bid_minimo(15000, tarefa3),
       decremento(5000, tarefa1),
       decremento(5000, tarefa2),
       decremento(5000, tarefa3),
