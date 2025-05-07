@@ -55,7 +55,7 @@ mas main {
     } */
 
     agent leiloeiro: leiloeiro.asl{
-    goals: anunciar_tarefa(tarefa1,22000), anunciar_tarefa(tarefa2,22000), anunciar_tarefa(tarefa3,22000)
+    goals: anunciar_tarefa(tarefa1, 30000), anunciar_tarefa(tarefa2, 30000), anunciar_tarefa(tarefa3,22000)
     }
 
     /*agent bider1: bider.asl{
@@ -66,7 +66,7 @@ mas main {
                decremento(2000,tarefa2),
                decremento(2000,tarefa3),
     }*/
-  /*
+  
     agent bider2: bider.asl{
       beliefs: bid_minimo(15000,tarefa1), 
                bid_minimo(15000,tarefa2),
@@ -74,21 +74,21 @@ mas main {
                decremento(1000,tarefa1),
                decremento(1000,tarefa2),
                decremento(1000,tarefa3),
-    }*/
+    }
 
-    /*
+    /**/
     agent bider_estrategico: claudeBider.asl {
-    beliefs: valor_minimo(5000),
+    beliefs: valor_minimo(7000),
              decremento_padrao(1000),
              decremento_agressivo(2000),
              min_total(20000),
              soma_atual(0)
-    }*/
-
+    }
+/**/
     agent bider_conservador: gptBider.asl {
-    beliefs:  bid_minimo(15000, tarefa1),
+    beliefs:  bid_minimo(25000, tarefa1),
       bid_minimo(15000, tarefa2),
-      bid_minimo(15000, tarefa3),
+      bid_minimo(18000, tarefa3),
       decremento(5000, tarefa1),
       decremento(5000, tarefa2),
       decremento(5000, tarefa3),
@@ -99,6 +99,9 @@ mas main {
     
     agent bider_chines: deepseekBider.asl {
     beliefs: min_total(20000),
+      bid_minimo(6667, tarefa1),    // Não oferecer menos que 25k em tarefa1
+      bid_minimo(6667, tarefa2),     // Não oferecer menos que 15k em tarefa2
+      bid_minimo(6667, tarefa3), 
       decremento_padrao(4000), // Pode ajustar conforme a estratégia
       agressividade(3) ,        // Mais agressivo em leilões competitivos
       soma_atual(0)

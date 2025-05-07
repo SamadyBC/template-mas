@@ -6,8 +6,8 @@
         .broadcast(tell,oferta(T,MaxVal-D)).
 
 +oferta(T,Val): bid_minimo(Min,T) & decremento(D,T) & (Val-D >= Min)
-    <-  .print("Vou cobrir a oferta de ", Val, " com ", Val-D, " para a tarefa ", T);
-        .wait(200);
+    <-  //.print("Vou cobrir a oferta de ", Val, " com ", Val-D, " para a tarefa ", T);
+        //.wait(200);
         .broadcast(tell,oferta(T,Val-D)).
 
 +oferta(T,Val): bid_minimo(Min,T) & decremento(D,T) & (Val-D <= Min)

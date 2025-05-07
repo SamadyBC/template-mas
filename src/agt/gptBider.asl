@@ -14,21 +14,18 @@
 // Reage apenas a ofertas melhores (menores que a minha)
 +oferta(T, Val)[source(Bider)]: meu_lance(T, MeuUltimo) & bid_minimo(Min, T) & decremento(D, T) & (Val < MeuUltimo) & (Val - D >= Min)
     <- NovaOferta = Val - D;
-       //.print("Concorrente ofertou ", Val, " MENOR que o meu lance (", MeuUltimo, ") na tarefa ", T, ". Cobrindo com ", NovaOferta);
+       .print("Concorrente ofertou ", Val, " MENOR que o meu lance (", MeuUltimo, ") na tarefa ", T, ". Cobrindo com ", NovaOferta);
        !registrar_menor_oferta(Bider, T, Val);
        !incrementa_agressividade(T);
        !ajusta_decremento(T);
-       .wait(200);
-       .broadcast(tell, oferta(T, NovaOferta));
-       -meu_lance(T, _); // remove lance anterior
-       +meu_lance(T, NovaOferta);
-       !atualiza_soma.
+       !verifica_soma_total(T, NovaOferta).
+       //.wait(200).
 
 
 +oferta(T, Val): meu_lance(T, MeuUltimo) & bid_minimo(Min, T) & decremento(D, T) & (Val < MeuUltimo) & (Val - D < Min) // Ao inves de sair da disputa unicamente, verificar margem e realizar lance limite baseado na margem 
     <- !registrar_menor_oferta(Bider, T, Val);
     //!verificar_ajuste_bid_min(T);
-    //.print("Vou ficar de fora da tarefa ", T, " pois o valor já está em ", Val, " e meu mínimo é ", Min, ".");
+    .print("Verificando a possibilidade de adaptar meu bid minimo para ", T);
     !ajustar_bid_minimo(T). 
     //.print("Vou ficar de fora da tarefa ", T, " pois o valor já está em ", Val, " e meu mínimo é ", Min, ".").
 
@@ -102,33 +99,39 @@
    <- .findall(V, meu_lance(_, V), L);
       !soma_lista(L, S);
       -soma_atual(_);
-      +soma_atual(S).
+      +soma_atual(S);
+      .print("Soma atualizada: ", S).
 
 // Caso em que compensa ajustar
 +!ajustar_bid_minimo(T) : soma_atual(S) & min_total(Min) & decremento(D, T) & menor_oferta(Outro, T, Val) & meu_lance(T, MeuLance) & S > Min & ( MeuLance - Val <= (S - (Min + D)))
-<- Novo_Lance = Val - D;
-   if (Novo_Lance <= 6667) {
-       
-     } else {
-
-    }.
+   <- Novo_Lance = Val - D;
    -bid_minimo(_, T);
    +bid_minimo(Novo_Lance, T);
    .print("Decremento: ", D);
    .print("Soma atual: ", S);
    .print("Ajustei o bid_minimo da tarefa ", T, " para: ", Novo_Lance, " visando atingir a meta exata!");
-   !lance_final(T).
+   //!lance_final(T).
+   !verifica_soma_total(T, Novo_Lance).
 
 // Caso em que não compensa ajustar
-+!ajustar_bid_minimo(T) : soma_atual(S) & min_total(Min) & decremento(D, T) & menor_oferta(Outro, T, Val) & meu_lance(T, MeuLance) & S < Min & ( MeuLance - Val <= (S - (Min + D)))
-<- true. //.print("NÃO ajustei o bid_minimo de ", T, ". Oferta não permite bater a meta precisa.").
++!ajustar_bid_minimo(T) : soma_atual(S) & min_total(Min) & decremento(D, T) & menor_oferta(Outro, T, Val) & meu_lance(T, MeuLance) & S < Min 
+   <- .print("NÃO ajustei o bid_minimo de ", T, ". Oferta não permite bater a meta precisa.").
+
++!ajustar_bid_minimo(T) : soma_atual(S) & min_total(Min) & decremento(D, T) & menor_oferta(Outro, T, Val) & meu_lance(T, MeuLance) 
+   <- .print("Soma: ", S);
+   .print("Minimo total ", Min);
+   .print("Decremento ", D);
+   .print("Menor oferta adversaria ", Val);
+   .print("Meu lance ", MeuLance).
+
++!ajustar_bid_minimo(T) <- .print("Caso padrao").
 
 +!lance_final(T) : bid_minimo(Min, T)
   <- //.print("Enviando lance final de ", Min, " na tarefa ", T, " para tentar fechar a meta!");
      .broadcast(tell, oferta(T, Min));
      -meu_lance(T, _);
-     +meu_lance(T, Min);
-     !atualiza_soma.
+     +meu_lance(T, Min).
+     
 
 /* Dispara o controle assim que soma_atual mudar
 +soma_atual(S) : min_total(Min) & S >= Min
@@ -137,6 +140,15 @@
 +soma_atual(S) : min_total(Min) & S < Min
    <- .print("A soma dos lances realizados é ", S, ". esta abaixo da cota mínima (", Min, ")").
 */
+
++!verifica_soma_total(T, Oferta): soma_atual(S) & min_total(MinTotal) & S - Oferta > MinTotal 
+   <- .print("Teste1");
+   .broadcast(tell, oferta(T, Oferta)); // Novo plano a partir do verifica soma.
+   -meu_lance(T, _); // remove lance anterior // Novo plano a partir do verifica soma.
+   +meu_lance(T, Oferta); // Novo plano a partir do verifica soma.
+   !atualiza_soma. // Novo plano a partir do verifica soma.
+
++!verifica_soma_total(T, Oferta): soma_atual(S) & min_total(MinTotal) & S - Oferta <= MinTotal <- .print("Teste2").
 
 // Caso base: lista vazia
 +!soma_lista([], 0).

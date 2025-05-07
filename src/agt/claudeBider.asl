@@ -59,19 +59,19 @@ vencendo(L) :- .findall(tarefa(T,V), vencendo_tarefa(T,V), L).
 
 // Quando o agente perde uma tarefa que estava vencendo
 +vencedor(Ag, T, Val)[source(leiloeiro)] : vencendo_tarefa(T, _) & not .my_name(Ag) <-
-    .print("Perdi a tarefa ", T, " para ", Ag, " com valor ", Val);
+    //.print("Perdi a tarefa ", T, " para ", Ag, " com valor ", Val);
     -vencendo_tarefa(T, _);
     // Atualiza a soma atual
     .findall(V, vencendo_tarefa(_, V), Valores);
     // Calcula a soma usando nossa regra
     ?soma_lista(Valores, NovaSOma);
-    -+soma_atual(NovaSOma);
-    .print("Soma atual de tarefas vencendo: ", NovaSOma);
+    -+soma_atual(NovaSoma);
+    //.print("Soma atual de tarefas vencendo: ", NovaSOma);
     // Aumenta a prioridade desta tarefa
     ?tarefa_ativa(T, _, P);
     NovaPrioridade = math.max(1, P-1);
-    -+tarefa_ativa(T, Val, NovaPrioridade);
-    .print("Aumentando prioridade da tarefa ", T, " para ", NovaPrioridade).
+    -+tarefa_ativa(T, Val, NovaPrioridade).
+    //.print("Aumentando prioridade da tarefa ", T, " para ", NovaPrioridade).
 
 // Quando recebe uma oferta de outro agente para uma tarefa que está participando
 +oferta(T, Val)[source(Ag)] : 
@@ -95,18 +95,13 @@ vencendo(L) :- .findall(tarefa(T,V), vencendo_tarefa(T,V), L).
     .findall(tarefa(Tid,Tval), vencendo_tarefa(Tid,Tval), ListaVencendo);
     
     if (NovoValor >= MinVal & pode_ofertar(T, NovoValor)) {
-        .print("Cobrindo oferta para tarefa ", T, " de ", Val, " com ", NovoValor);
+        //.print("Cobrindo oferta para tarefa ", T, " de ", Val, " com ", NovoValor);
         .wait(math.random(300) + 100); // Espera aleatória para evitar conflitos
         .broadcast(tell, oferta(T, NovoValor));
     } else {
-        .print("Não vou cobrir oferta para tarefa ", T, " pois valor ", NovoValor, 
-               " é muito baixo ou comprometeria o mínimo total de 20k");
+        //.print("Não vou cobrir oferta para tarefa ", T, " pois valor ", NovoValor," é muito baixo ou comprometeria o mínimo total de 20k");
     }.
 
-// Avaliação periódica usando um evento de tempo
-+!start <-
-    .print("Agente licitante estratégico iniciado!");
-    .at("now +1000", "+verificar_estrategia").
 
 +verificar_estrategia <-
     //.print("Avaliando estratégia atual...");
@@ -114,16 +109,16 @@ vencendo(L) :- .findall(tarefa(T,V), vencendo_tarefa(T,V), L).
     //.print("Soma atual de tarefas vencendo: ", Soma);
     
     if (Soma < 20000) {
-        .print("Alerta: Soma atual abaixo do mínimo necessário!");
+        //.print("Alerta: Soma atual abaixo do mínimo necessário!");
         // Busca tarefas ativas que não estamos vencendo
         .findall(tarefa(T,V,P), tarefa_ativa(T,V,P) & not vencendo_tarefa(T,_), TarefasDisponiveis);
         
         if (.length(TarefasDisponiveis) > 0) {
-            .print("Tarefas disponíveis para tentar: ", TarefasDisponiveis);
+            //.print("Tarefas disponíveis para tentar: ", TarefasDisponiveis);
             // Aumenta prioridade de todas as tarefas disponíveis
             for (.member(tarefa(T,V,P), TarefasDisponiveis)) {
                 -+tarefa_ativa(T, V, 1);
-                .print("Aumentando prioridade da tarefa ", T, " para máxima");
+                //.print("Aumentando prioridade da tarefa ", T, " para máxima");
             }
         }
     }

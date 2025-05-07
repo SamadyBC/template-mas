@@ -24,7 +24,7 @@
 
 @p3 [atomic]
 +oferta(T,Val)[source(Bider)]: vencedor(Name,T,Valor) & Valor < Val
-    <-  .print("Ignorando oferta: (",Bider,",",T,",",Val,") pois ela eh maior que anterior: (", Name,",",T,",",Valor,")").
+    <-  true.//.print("Ignorando oferta: (",Bider,",",T,",",Val,") pois ela eh maior que anterior: (", Name,",",T,",",Valor,")").
 
 { include("$jacamo/templates/common-cartago.asl") }
 { include("$jacamo/templates/common-moise.asl") }
