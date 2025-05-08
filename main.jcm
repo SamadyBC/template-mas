@@ -76,14 +76,14 @@ mas main {
                decremento(1000,tarefa3),
     }
 
-    /**/
+    /*
     agent bider_estrategico: claudeBider.asl {
     beliefs: valor_minimo(7000),
              decremento_padrao(1000),
              decremento_agressivo(2000),
              min_total(20000),
              soma_atual(0)
-    }
+    }*/
 /**/
     agent bider_conservador: gptBider.asl {
     beliefs:  bid_minimo(25000, tarefa1),
@@ -92,7 +92,7 @@ mas main {
       decremento(5000, tarefa1),
       decremento(5000, tarefa2),
       decremento(5000, tarefa3),
-      min_total(20000),
+      min_total(21000),
       soma_atual(0)
     /*goals: checar_soma_final,*/
     }
