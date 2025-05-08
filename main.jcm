@@ -23,16 +23,6 @@ mas main {
 
     }
 
-    agent sensor_temp: sensor.asl{
-      beliefs: temp_atual(33)
-      goals: medir_temperatura
-    }
-
-    agent atuador_temp: temperature_Controller.asl {
-      beliefs: temp_ideal("Morango", 19), temp_ideal("Alface", 21), producao("Morango", "Estufa1"), producao("Alface", "Estufa2"), temp_atual(29)
-      goals: regular_temperatura("Estufa1")
-    }*/
-
     agent brasileiro: emissor.asl {
       beliefs: idioma("Portugues"), cumprimento("Portugues", "Ola"), learn("portuguese", "Ola")
       goals: comunicar
@@ -52,5 +42,23 @@ mas main {
 
     agent italiano: receptor.asl {
       beliefs: idioma("Italiano"), cumprimento("Italiano", "Ciao")
+    }    
+    
+    */
+
+    agent sensor_temp: sensor_Temperature.asl{
+      // beliefs: temp_ambiente(33)
+      goals: medir_temperatura // Este objetivo estara conectado ao ambiente - uma janela onde sera possivel alterar o valor da temperatura.
     }
+/**/
+    agent atuador_temp: controller_Temperature.asl {
+      beliefs: temp_ideal("Morango", 19), temp_ideal("Alface", 21), producao("Morango", "Estufa1"), producao("Alface", "Estufa2")
+      //goals: regular_temperatura("Estufa1")
+    }
+
+
+    agent gerenciador_ambiente: manager_Ambiente.asl{
+      goals: verifica_estabilidade_sistema
+    }
+
 }
