@@ -25,7 +25,8 @@
 +!ajustar_temperatura(Local): not dados_temperatura(Local, TA)
     <- .print("Sem dados de temperatura").
 
-
+//Alterar comportamento do agente de gerenciamento de temperatura para que ele realize o ajuste da temperatura quando receber os dados de temperatura.
+//Adicionar comportamento ciclico.
 
 
 //.send(sensor_temp, tell, comando_gerenciador(Local)).
