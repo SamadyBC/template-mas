@@ -15,8 +15,13 @@
     //.wait(5000);
     //!medir_temperatura.
 
-+!obter_temperatura(Local) <- // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
-    .print("Comando recebido do Gerenciador");
++!obter_temperatura(Local): temp_ambiente(_) // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
+    <- .print("Comando recebido do Gerenciador");
+    .print("Verficar temperatura em: ", Local);
+    !executar_comando(Local).
+
++!obter_temperatura(Local): not temp_ambiente(_) <- // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
+    .print("Primeiro comando recebido do Gerenciador");
     .print("Verficar temperatura em: ", Local);
     !executar_comando(Local).
 
@@ -24,4 +29,9 @@
 +!executar_comando(Local): temp_ambiente(TA) // Como retornar esse dado depois dechamar o plano medir temperatura?
     <- !medir_temperatura;
     //.print("Temperatura ", TA, " graus ", "em ", Local);
+    .send(gerenciador_ambiente, tell, dados_temperatura(Local, TA)).
+
++!executar_comando(Local): not temp_ambiente(TA) // Como retornar esse dado depois dechamar o plano medir temperatura?
+    <- !medir_temperatura;
+    .print("EC: Temperatura ", TA, " graus ", "em ", Local);
     .send(gerenciador_ambiente, tell, dados_temperatura(Local, TA)).

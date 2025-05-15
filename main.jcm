@@ -48,7 +48,7 @@ mas main {
 
     agent sensor_temp: sensor_Temperature.asl{
       // beliefs: temp_ambiente(33)
-      goals: medir_temperatura // Este objetivo estara conectado ao ambiente - uma janela onde sera possivel alterar o valor da temperatura.
+      //goals: medir_temperatura // Este objetivo estara conectado ao ambiente - uma janela onde sera possivel alterar o valor da temperatura.
     }
 /**/
     agent atuador_temp: controller_Temperature.asl {

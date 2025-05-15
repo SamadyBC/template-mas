@@ -20,8 +20,14 @@
 +!obtem_temperatura(Local) 
     <- .send(sensor_temp, achieve, obter_temperatura(Local)).
 
-+dados_temperatura(Local, TA)
-    <- .print("Temperatura em ", Local,": ", TA);
++dados_temperatura(Local, TA): not dados_temperatura(_, _)
+    <- .print("Primeira recepcao de dados");
+    .print("Temperatura em ", Local,": ", TA);
+    !verifica_parametros_temp.
+
++dados_temperatura(Local, TA): dados_temperatura(Local, TA)
+    <- .print("Demais recepcoes de dados");
+    .print("Temperatura em ", Local,": ", TA);
     !verifica_parametros_temp.
 
 +!verifica_parametros_temp: dados_temperatura(Local, TA) & producao(Cultura, Local) & temp_ideal_cult(Cultura, TI)
@@ -35,6 +41,9 @@
         .print("Temperatua instavel");
         !ajustar_temperatura(TA, TI);
     }.
+
++!verifica_parametros_temp: producao(Cultura, Local) & temp_ideal_cult(Cultura, TI)
+    <- .print("Caso base para debug").
 
 +!ajustar_temperatura(Temp_Atual, Temp_Ideal)
     <- .send(atuador_temp, achieve, ajustar_temperatura(Temp_Atual, Temp_Ideal)).
