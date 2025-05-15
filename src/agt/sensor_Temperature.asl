@@ -15,7 +15,7 @@
     //.wait(5000);
     //!medir_temperatura.
 
-+!comando_gerenciador(Local) <- // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
++!obter_temperatura(Local) <- // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
     .print("Comando recebido do Gerenciador");
     .print("Verficar temperatura em: ", Local);
     !executar_comando(Local).

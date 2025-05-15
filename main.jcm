@@ -58,6 +58,7 @@ mas main {
 
 
     agent gerenciador_ambiente: manager_Ambiente.asl{
+      beliefs: local("Estufa1"), producao("Morango", "Estufa1"), temp_ideal_cult("Morango", 19)
       goals: verifica_estabilidade_sistema
     }
 
