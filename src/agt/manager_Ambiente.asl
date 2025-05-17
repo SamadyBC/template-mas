@@ -10,9 +10,16 @@
 +!verifica_estabilidade_sistema: local(Local)
     <- .print("Iniciando objetivo de verificar estabilidade do sistema");
     // Local = "Estufa1"; // Deixar isso dinamico
+    // Inicialmente busca informacoes do ambiente que esta gerenciando: cultivo, temperaturas ideais cultivo, umidade do solo ideal, quantidade de luz ideal.
+    // Inicia o processo verificar os sensores e recolher informacoes atualizadas sobre os parametros de controle - envia dados conforme a necessidade.
+    // Realiza esse processo ciclica e reativamente conforme as mensagens dos agentes responsaveis por recolher os dados dos sensores e dos atuadores chegarem.
+    // Periodicamente envia dados para o agente orquestrador dos ambientes que eh resposavel por armazenar no banco de dados e gerar relatorios para usuarios.
     !obtem_temperatura(Local);
+    //obtem_umidade_solo;
+    //obtem_concentracao de CO2
+    //obtem_intensidade_luminosa
     .wait(10000);
-    !verifica_estabilidade_sistema.
+    !verifica_estabilidade_sistema. // Por que exatamente dessa sintaxe?
     /*!ajustar_temperatura(Local);
     .wait(10000);
     !verifica_estabilidade_sistema.
@@ -20,12 +27,7 @@
 +!obtem_temperatura(Local) 
     <- .send(sensor_temp, achieve, obter_temperatura(Local)).
 
-+dados_temperatura(Local, TA): not dados_temperatura(_, _)
-    <- .print("Primeira recepcao de dados");
-    .print("Temperatura em ", Local,": ", TA);
-    !verifica_parametros_temp.
-
-+dados_temperatura(Local, TA): dados_temperatura(Local, TA)
++dados_temperatura(Local, TA): dados_temperatura(_, _)
     <- .print("Demais recepcoes de dados");
     .print("Temperatura em ", Local,": ", TA);
     !verifica_parametros_temp.

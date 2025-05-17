@@ -26,12 +26,13 @@
     !executar_comando(Local).
 
 // Planos de Comunicao:
-+!executar_comando(Local): temp_ambiente(TA) // Como retornar esse dado depois dechamar o plano medir temperatura?
++!executar_comando(Local): temp_ambiente(TA) // Como retornar esse dado depois de chamar o plano medir temperatura?
     <- !medir_temperatura;
     //.print("Temperatura ", TA, " graus ", "em ", Local);
     .send(gerenciador_ambiente, tell, dados_temperatura(Local, TA)).
 
 +!executar_comando(Local): not temp_ambiente(TA) // Como retornar esse dado depois dechamar o plano medir temperatura?
     <- !medir_temperatura;
-    .print("EC: Temperatura ", TA, " graus ", "em ", Local);
-    .send(gerenciador_ambiente, tell, dados_temperatura(Local, TA)).
+    ?temp_ambiente(Temp_Amb_Medida);
+    .print("EC - Temperatura Medida: ", Temp_Amb_Medida).
+    .send(gerenciador_ambiente, tell, dados_temperatura(Local, Temp_Amb_Medida)).

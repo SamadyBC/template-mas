@@ -9,23 +9,23 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
 
 /* Initial plans */
 
-+!regular_temperatura <- !verificar_temp.
++!regular_temperatura
+    <- .print("Regular temperatura caso 1");
+    !verificar_temp.
     //.wait(5000);
     //!regular_temperatura(Local).
 
-+!regular_temperatura <- .print("Caso padrao").
++!regular_temperatura: not temp_atual(Teste1) & temp_ideal(Teste2) <- .print("Regular temperatura caso padrao").
 
-+!verificar_temp: reduzir_temperatura(C) & temp_ideal(Temp_Ideal) <- .print("Temperatura Ideal: ", Temp_Ideal, "°C.");
-    .print("Reduzir a temperatura em: ", C, " graus celsius.");
++!verificar_temp: reduzir_temperatura(C) <- .print("Reduzir a temperatura em: ", C, " graus celsius.");
     !resfriar(C).
 
-+!verificar_temp: aumentar_temperatura(C) & temp_ideal(Temp_Ideal) <- .print("Temperatura Ideal: ", Temp_Ideal, "°C.");
-    .print("Aumentar a temperatura em: ", C, " graus celsius.");
++!verificar_temp: aumentar_temperatura(C) <- .print("Aumentar a temperatura em: ", C, " graus celsius.");
     !aquecer(C).
 
 +!verificar_temp: temperatura_estavel(C) <- .print("Temperatura ideal atingida em: ", C, " graus celsius.").
 
-+!verificar_temp: not temp_atual(Temp_Atual) <- .print("Sem informacao da temperatura atual").
+//+!verificar_temp: not temp_atual(Temp_Atual) <- .print("Sem informacao da temperatura atual").
 
 +!aquecer(C): temp_atual(Temp) <- .print("Aquecendo");
     .wait(1000);
@@ -68,10 +68,12 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     };
     !executar_comando.
 
-+!executar_comando <- .print("Proxima etapa: executar comando").
-//    !regular_temperatura; // Verificar a necessidae de enviar o local junto ao comando de estabilizacao de temperatua
-//    .send(gerenciador_ambiente, tell, status_temp("Estabilizado")).
++!executar_comando: temp_atual(Teste1) & temp_ideal(Teste2) 
+    <- .print("Proxima etapa: regular temp");
+    !regular_temperatura; // Verificar a necessidade de enviar o local junto ao comando de estabilizacao de temperatura
+    .send(gerenciador_ambiente, tell, status_temp("Estabilizado")).
 
++!executar_comando <- .print("nao contem informacao de ta e ti").
 /* 2. Executar comando recebido 
 +!executar_comando(C, Temp_Ideal): not temp_atual(_) <-
     .print("Inicialmente sem informacao de Temperatura");

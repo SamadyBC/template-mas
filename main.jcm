@@ -52,8 +52,8 @@ mas main {
     }
 /**/
     agent atuador_temp: controller_Temperature.asl {
-      beliefs: temp_ideal("Morango", 19), temp_ideal("Alface", 21), producao("Morango", "Estufa1"), producao("Alface", "Estufa2")
-      //goals: regular_temperatura("Estufa1")
+      beliefs: producao("Morango", "Estufa1"), producao("Alface", "Estufa2")
+      //goals: regular_temperatura("Estufa1") temp_ideal("Morango", 19), temp_ideal("Alface", 21),
     }
 
 
