@@ -62,8 +62,12 @@ mas main {
       goals: verifica_estabilidade_sistema
     }
 
-    workspace w {
+    /*workspace w {
       artifact ac: artifacts.ArCondicionado() 
+    }*/
+    
+    workspace w1 {
+      artifact tc: artifacts.Temperature_Controller() 
     }
 
 }

@@ -85,7 +85,7 @@ public class ArCondicionado extends GUIArtifact {
 		execInternalOp("update");
 	}
 	
-	class AC {
+	class AC { //Comportamento
 		
 		private boolean isOn = false;
 		private int temperatura_ambiente = 0;
