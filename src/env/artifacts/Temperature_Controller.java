@@ -19,31 +19,94 @@ public class Temperature_Controller extends GUIArtifact{
 
 	private InterfaceControladorTemp frame;
 	//private TemperaturaAmbienteSimulator TA;
-	//private AC ac_model = new AC(false, 25, 25);
+	private ControladorTemperatura controlador = new ControladorTemperatura(false, 25, 25);
 
 	public void setup() {
-		//defineObsProperty("ligado", ac_model.isOn());
-		//defineObsProperty("temperatura_ambiente", ac_model.getTemperatura_ambiente());
-		//defineObsProperty("temperatura_ac", ac_model.getTemperatura());
-		//System.out.println("Inicializado com " + ac_model.getTemperatura());
+		defineObsProperty("tc_on", controlador.isOn());
+		defineObsProperty("temperatura_ambiente", controlador.getTemperatura_ambiente());
+		defineObsProperty("temperatura_ac", controlador.getTemperatura_definida());
+		System.out.println("Inicializado com " + controlador.getTemperatura_definida());
 		
 		create_frame();
+		return;
 	}
 	
 	void create_frame() {
 		frame = new InterfaceControladorTemp();
 		linkActionEventToOp(frame.setTemperatureButton,"ok"); // Nao gostei desse string
 		linkWindowClosingEventToOp(frame, "closed"); // 
-		frame.setVisible(true);		
+		frame.setVisible(true);
+		return;		
+	}
+
+	@OPERATION
+	void ligar() {
+		this.controlador.setOn(true);
+		getObsProperty("tc_on").updateValue(controlador.isOn());
+		return;
+	}
+	
+	@OPERATION
+	void desligar() {
+		this.controlador.setOn(false);
+		getObsProperty("tc_on").updateValue(controlador.isOn());
+		return;
 	}
 
 	@INTERNAL_OPERATION 
 	void ok(ActionEvent ev){
-		//ac_model.setTemperatura(Integer.parseInt(frame.getTemperaturaD()));
-		//ac_model.setTemperatura_ambiente(Integer.parseInt(frame.getTemperaturaA()));
-		//getObsProperty("temperatura_ac").updateValue(ac_model.getTemperatura()); - Comunicao com o agente
-		//getObsProperty("temperatura_ambiente").updateValue(ac_model.getTemperatura_ambiente());
+		controlador.setTemperatura_definida(Integer.parseInt(frame.getTemperaturaDesejada()));
+		controlador.setTemperatura_ambiente(Integer.parseInt(frame.getTemperaturaAmbiente()));
+		//getObsProperty("temperatura_ac").updateValue(controlador.getTemperatura_definida()); - Comunicao com o agente
+		//getObsProperty("temperatura_ambiente").updateValue(controlador.getTemperatura_ambiente());
+		System.out.println("Temperatura Definida: " + controlador.getTemperatura_definida());
 		signal("Temperatura Definida");
+		return;
+	}
+
+	@INTERNAL_OPERATION 
+	void closed(WindowEvent ev){
+		signal("closed");
+		return;
+	}
+
+	class ControladorTemperatura { //Comportamento
+		
+		private boolean isOn = false;
+		private int temperaturaAmbiente; // Devo inicializar os valores?
+		private int temperaturaDefinida;
+		
+		public ControladorTemperatura(boolean isOn, int TA, int TD) { // Construtor
+			super(); // Usado para chamar o construtor da superclasse sem parâmetros. Nesse caso, não é necessário, mas é uma boa prática.
+			this.isOn = isOn;
+			this.temperaturaAmbiente = TA;
+			this.temperaturaDefinida = TD;
+		}
+
+		public boolean isOn() {
+			return isOn;
+		}
+
+		public void setOn(boolean isOn) {
+			this.isOn = isOn;
+		}
+
+		public int getTemperatura_ambiente() {
+			return temperaturaAmbiente;
+		}
+
+		public void setTemperatura_ambiente(int temperatura_ambiente) {
+			this.temperaturaAmbiente = temperatura_ambiente;
+		}
+
+		public int getTemperatura_definida() {
+			return temperaturaDefinida;
+		}
+
+		public void setTemperatura_definida(int temperatura_desejada) {
+			this.temperaturaDefinida = temperatura_desejada;
+		}	
+			
 	}
 
     class InterfaceControladorTemp extends JFrame {	
