@@ -24,7 +24,7 @@ public class Temperature_Controller extends GUIArtifact{
 	public void setup() {
 		defineObsProperty("tc_on", controlador.isOn());
 		defineObsProperty("temperatura_ambiente", controlador.getTemperatura_ambiente());
-		defineObsProperty("temperatura_ac", controlador.getTemperatura_definida());
+		defineObsProperty("temperatura_desejada", controlador.getTemperatura_definida());
 		System.out.println("Inicializado com " + controlador.getTemperatura_definida());
 		
 		create_frame();
@@ -43,6 +43,7 @@ public class Temperature_Controller extends GUIArtifact{
 	void ligar() {
 		this.controlador.setOn(true);
 		getObsProperty("tc_on").updateValue(controlador.isOn());
+		System.out.println("Operacao ligar() executada. Controlador ligado.");
 		return;
 	}
 	
@@ -53,12 +54,19 @@ public class Temperature_Controller extends GUIArtifact{
 		return;
 	}
 
+	@OPERATION
+	void atualizarTempAmbienteInterface(int temperaturaAmbiente){
+		frame.temperaturaAmbiente.setText(Integer.toString(temperaturaAmbiente));
+		System.out.println("Temperatura Ambiente atualizada: " + temperaturaAmbiente);
+		return;
+	}
+
 	@INTERNAL_OPERATION 
 	void ok(ActionEvent ev){
 		controlador.setTemperatura_definida(Integer.parseInt(frame.getTemperaturaDesejada()));
 		controlador.setTemperatura_ambiente(Integer.parseInt(frame.getTemperaturaAmbiente()));
-		//getObsProperty("temperatura_ac").updateValue(controlador.getTemperatura_definida()); - Comunicao com o agente
-		//getObsProperty("temperatura_ambiente").updateValue(controlador.getTemperatura_ambiente());
+		getObsProperty("temperatura_desejada").updateValue(controlador.getTemperatura_definida()); //- Comunicao com o agente
+		getObsProperty("temperatura_ambiente").updateValue(controlador.getTemperatura_ambiente());
 		System.out.println("Temperatura Definida: " + controlador.getTemperatura_definida());
 		signal("Temperatura Definida");
 		return;

@@ -48,13 +48,14 @@ mas main {
 
     agent sensor_temp: sensor_Temperature.asl{
       // beliefs: temp_ambiente(33)
-      //goals: medir_temperatura // Este objetivo estara conectado ao ambiente - uma janela onde sera possivel alterar o valor da temperatura.
+      goals: configuracao_inicial  // Este objetivo estara conectado ao ambiente - uma janela onde sera possivel alterar o valor da temperatura. - medir_temperatura
     }
 /**/
     agent atuador_temp: controller_Temperature.asl {
-      beliefs: producao("Morango", "Estufa1"), producao("Alface", "Estufa2")
-      //goals: regular_temperatura("Estufa1") temp_ideal("Morango", 19), temp_ideal("Alface", 21),
-    }
+      //beliefs: producao("Morango", "Estufa1"), producao("Alface", "Estufa2")
+      goals: configuracao_inicial
+    } //regular_temperatura("Estufa1") temp_ideal("Morango", 19), temp_ideal("Alface", 21),
+    
 
 
     agent gerenciador_ambiente: manager_Ambiente.asl{
@@ -67,7 +68,8 @@ mas main {
     }*/
     
     workspace w1 {
-      artifact tc: artifacts.Temperature_Controller() 
+      artifact tc: artifacts.Temperature_Controller()
+      //agents: sensor_temp, atuador_temp, gerenciador_ambiente
     }
 
 }

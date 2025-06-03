@@ -14,12 +14,12 @@
     // Inicia o processo verificar os sensores e recolher informacoes atualizadas sobre os parametros de controle - envia dados conforme a necessidade.
     // Realiza esse processo ciclica e reativamente conforme as mensagens dos agentes responsaveis por recolher os dados dos sensores e dos atuadores chegarem.
     // Periodicamente envia dados para o agente orquestrador dos ambientes que eh resposavel por armazenar no banco de dados e gerar relatorios para usuarios.
-    !obtem_temperatura(Local);
+    !obtem_temperatura(Local).
     //obtem_umidade_solo;
     //obtem_concentracao de CO2
     //obtem_intensidade_luminosa
-    .wait(10000);
-    !verifica_estabilidade_sistema. // Por que exatamente dessa sintaxe?
+    //.wait(10000);
+    //!verifica_estabilidade_sistema. // Por que exatamente dessa sintaxe?
     /*!ajustar_temperatura(Local);
     .wait(10000);
     !verifica_estabilidade_sistema.
@@ -28,7 +28,7 @@
     <- .send(sensor_temp, achieve, obter_temperatura(Local)).
 
 +dados_temperatura(Local, TA): dados_temperatura(_, _)
-    <- .print("Demais recepcoes de dados");
+    <- .print("Recepcao dados do sensor de temperatura");
     .print("Temperatura em ", Local,": ", TA);
     !verifica_parametros_temp.
 

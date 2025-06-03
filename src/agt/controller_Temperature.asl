@@ -9,6 +9,20 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
 
 /* Initial plans */
 
+//Configurar atuador para interagir com o ambiente e regular a temperatura
++!configuracao_inicial <- 
+    .print("Configurando o agente Controlador de Temperatura");
+    joinWorkspace("w1", Wid);
+    +workspace("w1", Wid);
+    lookupArtifact("tc", Aid);
+    focus(Aid);
+    !observar_ambiente.
+
++!observar_ambiente <-
+    .print("Observando o ambiente para realizar a alteracao nos parametros").
+    //makeArtifact("tc","artifacts.Temperature_Controller",[],Aid);
+    //focus(Aid).
+
 +!regular_temperatura
     <- .print("Regular temperatura caso 1");
     !verificar_temp.
@@ -28,6 +42,7 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
 //+!verificar_temp: not temp_atual(Temp_Atual) <- .print("Sem informacao da temperatura atual").
 
 +!aquecer(C): temp_atual(Temp) <- .print("Aquecendo");
+    ligar;
     .wait(1000);
     -temp_atual(Temp);
     +temp_atual(Temp + C);
@@ -35,6 +50,8 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
 +!resfriar(C): temp_atual(Temp) <- .print("Resfriando");
+    ligar;
+    atualizarTempAmbienteInterface(Temp - C);
     .wait(1000);
     -temp_atual(Temp);
     +temp_atual(Temp - C);
@@ -73,7 +90,7 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     !regular_temperatura; // Verificar a necessidade de enviar o local junto ao comando de estabilizacao de temperatura
     .send(gerenciador_ambiente, tell, status_temp("Estabilizado")).
 
-+!executar_comando <- .print("nao contem informacao de ta e ti").
++!executar_comando <- .print("nao contem informacao de TA e TI").
 /* 2. Executar comando recebido 
 +!executar_comando(C, Temp_Ideal): not temp_atual(_) <-
     .print("Inicialmente sem informacao de Temperatura");
