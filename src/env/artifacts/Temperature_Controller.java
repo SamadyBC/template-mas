@@ -33,7 +33,8 @@ public class Temperature_Controller extends GUIArtifact{
 	
 	void create_frame() {
 		frame = new InterfaceControladorTemp();
-		linkActionEventToOp(frame.setTemperatureButton,"ok"); // Nao gostei desse string
+		linkActionEventToOp(frame.setTemperatureDesButton,"setDesiredTemp"); // Nao gostei desse string
+		linkActionEventToOp(frame.setTemperatureAmbButton,"setAmbientTemp");
 		linkWindowClosingEventToOp(frame, "closed"); // 
 		frame.setVisible(true);
 		return;		
@@ -62,13 +63,20 @@ public class Temperature_Controller extends GUIArtifact{
 	}
 
 	@INTERNAL_OPERATION 
-	void ok(ActionEvent ev){
+	void setDesiredTemp(ActionEvent ev){
 		controlador.setTemperatura_definida(Integer.parseInt(frame.getTemperaturaDesejada()));
+		getObsProperty("temperatura_desejada").updateValue(controlador.getTemperatura_definida());
+		System.out.println("Temperatura Desejada Definida: " + controlador.getTemperatura_definida());
+		signal("setDesiredTemp");
+		return;
+	}
+
+	@INTERNAL_OPERATION
+	void setAmbientTemp(ActionEvent ev){
 		controlador.setTemperatura_ambiente(Integer.parseInt(frame.getTemperaturaAmbiente()));
-		getObsProperty("temperatura_desejada").updateValue(controlador.getTemperatura_definida()); //- Comunicao com o agente
 		getObsProperty("temperatura_ambiente").updateValue(controlador.getTemperatura_ambiente());
-		System.out.println("Temperatura Definida: " + controlador.getTemperatura_definida());
-		signal("Temperatura Definida");
+		System.out.println("Temperatura Ambiente Definida: " + controlador.getTemperatura_ambiente());
+		signal("setAmbientTemp");
 		return;
 	}
 
@@ -119,7 +127,8 @@ public class Temperature_Controller extends GUIArtifact{
 
     class InterfaceControladorTemp extends JFrame {	
 		
-		private JButton setTemperatureButton;
+		private JButton setTemperatureAmbButton;
+		private JButton setTemperatureDesButton;
 		private JTextField temperaturaAmbiente;
 		private JTextField temperaturaDesejada;
 		
@@ -134,23 +143,26 @@ public class Temperature_Controller extends GUIArtifact{
 			tempD.setText("Temperatura Desejada: ");
 			setContentPane(panel);
 			
-			setTemperatureButton = new JButton("Set Temperature");
-			setTemperatureButton.setSize(80,50); // Modificar tamanho do botao para texto ficar legivel
+			setTemperatureAmbButton = new JButton("Set Ambient Temperature");
+			setTemperatureAmbButton.setSize(120,50); // Modificar tamanho do botao para texto ficar legivel
+			setTemperatureDesButton = new JButton("Set Temperature");
+			setTemperatureDesButton.setSize(80,50); // Modificar tamanho do botao para texto ficar legivel
 			
 			temperaturaAmbiente = new JTextField(10);
-			temperaturaAmbiente.setText("33"); // Necessita definir esse valor ao iniciar?
+			temperaturaAmbiente.setText(""); // Necessita definir esse valor ao iniciar?
 			temperaturaAmbiente.setEditable(true);
 			
 			temperaturaDesejada = new JTextField(10);
-			temperaturaDesejada.setText("19"); // Necessita definir esse valor ao iniciar?
+			temperaturaDesejada.setText(""); // Necessita definir esse valor ao iniciar?
 			temperaturaDesejada.setEditable(true);
 			
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			panel.add(tempA);
 			panel.add(temperaturaAmbiente);
+			panel.add(setTemperatureAmbButton);
 			panel.add(tempD);
 			panel.add(temperaturaDesejada);
-			panel.add(setTemperatureButton);
+			panel.add(setTemperatureDesButton);
 			
 		}
 		

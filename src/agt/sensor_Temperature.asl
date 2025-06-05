@@ -34,7 +34,7 @@
     !obter_dados_sensorTemp.
 
 +!obter_dados_sensorTemp: temperatura_ambiente(TA)
-    <- .print("Leitura sensor de temperatura: ", TA);
+    <- .print("Leitura sensor de temperatura: ", TA); // Adicionar IF aqui para primeira execucao e para as demais execucoes
     +temp_ambiente_medida(TA);
     +temp_ambiente(TA);
     .print("Temperatura Medida Sensor: ", TA).
@@ -63,3 +63,8 @@
     ?temp_ambiente_medida(Temp_Amb_Medida2);
     .print("EC - Temperatura Medida: ", Temp_Amb_Medida);
     .send(gerenciador_ambiente, tell, dados_temperatura(Local, Temp_Amb_Medida)).
+
+// Planos de Percepcao de Signals:
++setAmbientTemp 
+    <- .print("Signal recebido: setAmbientTemp");
+    !obter_dados_sensorTemp.
