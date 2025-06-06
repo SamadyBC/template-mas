@@ -19,13 +19,13 @@ public class Temperature_Controller extends GUIArtifact{
 
 	private InterfaceControladorTemp frame;
 	//private TemperaturaAmbienteSimulator TA;
-	private ControladorTemperatura controlador = new ControladorTemperatura(false, 25, 25);
+	private ControladorTemperatura controlador = new ControladorTemperatura(false, 19, 25);
 
 	public void setup() {
 		defineObsProperty("tc_on", controlador.isOn());
 		defineObsProperty("temperatura_ambiente", controlador.getTemperatura_ambiente());
 		defineObsProperty("temperatura_desejada", controlador.getTemperatura_definida());
-		System.out.println("Inicializado com " + controlador.getTemperatura_definida());
+		System.out.println("Inicializado com temp desejada" + controlador.getTemperatura_definida());
 		
 		create_frame();
 		return;
