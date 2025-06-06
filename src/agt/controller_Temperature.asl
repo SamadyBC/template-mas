@@ -41,21 +41,22 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
 
 //+!verificar_temp: not temp_atual(Temp_Atual) <- .print("Sem informacao da temperatura atual").
 
-+!aquecer(C): temp_atual(Temp) <- .print("Aquecendo");
-    ligar;
++!aquecer(C): temp_atual(Temp) <- ligar;
+    .print("Aquecendo");
     .wait(1000);
     -temp_atual(Temp);
     +temp_atual(Temp + C);
-    .print("Temperatura estabilizada").
+    .print("Temperatura estabilizada");
+    atualizarTempAmbienteInterface(Temp + C).
     //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
-+!resfriar(C): temp_atual(Temp) <- .print("Resfriando");
-    ligar;
-    atualizarTempAmbienteInterface(Temp - C);
++!resfriar(C): temp_atual(Temp) <- ligar;
+    .print("Resfriando");
     .wait(1000);
     -temp_atual(Temp);
     +temp_atual(Temp - C);
-    .print("Temperatura estabilizada").
+    .print("Temperatura estabilizada");
+    atualizarTempAmbienteInterface(Temp - C).
     //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
 // Planos de Comunicao: 
@@ -88,7 +89,9 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
 +!executar_comando: temp_atual(Teste1) & temp_ideal(Teste2) 
     <- .print("Proxima etapa: regular temp");
     !regular_temperatura; // Verificar a necessidade de enviar o local junto ao comando de estabilizacao de temperatura
-    .send(gerenciador_ambiente, tell, status_temp("Estabilizado")).
+    ?temp_atual(TempAtt);
+    .print("Temperatura Regulada em: ", TempAtt, " graus celsius");
+    .send(gerenciador_ambiente, tell, status_temp("Estabilizado", TempAtt)).
 
 +!executar_comando <- .print("nao contem informacao de TA e TI").
 /* 2. Executar comando recebido 

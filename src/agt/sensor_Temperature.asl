@@ -33,8 +33,14 @@
     .wait(500);
     !obter_dados_sensorTemp.
 
-+!obter_dados_sensorTemp: temperatura_ambiente(TA)
-    <- .print("Leitura sensor de temperatura: ", TA); // Adicionar IF aqui para primeira execucao e para as demais execucoes
++!obter_dados_sensorTemp: temperatura_ambiente(TA) & not signal(_)
+    <- .print("Leitura sensor de temperatura sem signal: ", TA); // Adicionar IF aqui para primeira execucao e para as demais execucoes
+    +temp_ambiente_medida(TA);
+    +temp_ambiente(TA);
+    .print("Temperatura Medida Sensor: ", TA).
+
++!obter_dados_sensorTemp: temperatura_ambiente(TA) & signal(Teste)
+    <- .print("Leitura sensor de temperatura com signal: ", TA); // Adicionar IF aqui para primeira execucao e para as demais execucoes
     +temp_ambiente_medida(TA);
     +temp_ambiente(TA);
     .print("Temperatura Medida Sensor: ", TA).
@@ -53,10 +59,10 @@
 +!executar_comando(Local): temp_ambiente(TA) // Como retornar esse dado depois de chamar o plano medir temperatura?
     <- //!medir_temperatura;
     !obter_dados_sensorTemp;
-    //.print("Temperatura ", TA, " graus ", "em ", Local);
+    .print("Temperatura anterior: ", TA, " graus em ", Local);
     .send(gerenciador_ambiente, tell, dados_temperatura(Local, TA)).
 
-+!executar_comando(Local): not temp_ambiente(TA) // Como retornar esse dado depois dechamar o plano medir temperatura? - modificar essa crenca, adaptar o contexto
++!executar_comando(Local): not temp_ambiente(_) // Como retornar esse dado depois dechamar o plano medir temperatura? - modificar essa crenca, adaptar o contexto
     <- //!medir_temperatura;
     !obter_dados_sensorTemp;
     ?temp_ambiente(Temp_Amb_Medida);
@@ -67,4 +73,6 @@
 // Planos de Percepcao de Signals:
 +setAmbientTemp 
     <- .print("Signal recebido: setAmbientTemp");
-    !obter_dados_sensorTemp.
+    +signal(true);
+    -temp_ambiente(_);
+    !executar_comando("Estufa1").
