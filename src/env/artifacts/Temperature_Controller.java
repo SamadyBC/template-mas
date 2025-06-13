@@ -18,7 +18,6 @@ import cartago.tools.GUIArtifact;
 public class Temperature_Controller extends GUIArtifact{
 
 	private InterfaceControladorTemp frame;
-	//private TemperaturaAmbienteSimulator TA;
 	private ControladorTemperatura controlador = new ControladorTemperatura(false, 19, 25);
 
 	public void setup() {
