@@ -18,7 +18,7 @@ import cartago.tools.GUIArtifact;
 public class Temperature_Controller extends GUIArtifact{
 
 	private InterfaceControladorTemp frame;
-	private ControladorTemperatura controlador = new ControladorTemperatura(false, 19, 25);
+	private ControladorTemperatura controlador = new ControladorTemperatura(false, 19, 19);
 
 	public void setup() {
 		defineObsProperty("tc_on", controlador.isOn());
@@ -57,6 +57,7 @@ public class Temperature_Controller extends GUIArtifact{
 	@OPERATION
 	void atualizarTempAmbienteInterface(int temperaturaAmbiente){
 		frame.temperaturaAmbiente.setText(Integer.toString(temperaturaAmbiente));
+		getObsProperty("temperatura_ambiente").updateValue(temperaturaAmbiente);
 		System.out.println("Temperatura Ambiente atualizada: " + temperaturaAmbiente);
 		return;
 	}
