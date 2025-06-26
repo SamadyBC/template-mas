@@ -47,7 +47,6 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     -temp_atual(Temp);
     +temp_atual(Temp + C);
     atualizarTempAmbienteInterface(Temp + C).
-    //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
 +!resfriar(C): temp_atual(Temp) <- ligar;
     .print("Resfriando");
@@ -55,7 +54,6 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     -temp_atual(Temp);
     +temp_atual(Temp - C);
     atualizarTempAmbienteInterface(Temp - C).
-    //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
 // Planos de Comunicao: 
 
@@ -91,32 +89,3 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     .send(gerenciador_ambiente, tell, status_temp("Estabilizado", TempAtt)).
 
 +!executar_comando <- .print("nao contem informacao de TA e TI").
-
-/* 2. Executar comando recebido 
-+!executar_comando(C, Temp_Ideal): not temp_atual(_) <-
-    .print("Inicialmente sem informacao de Temperatura");
-    +temp_atual(C);
-    !regular_temperatura(Local);
-    .send(gerenciador_ambiente, tell, status_temperatura(Local, "Estabilizado")).
-
-
-+!executar_comando(C, Temp_Ideal): temp_atual(TA) & TA \== C <-
-    .print("Temperatura medida", C, " Temperatura armazenada", TA);
-    -temp_atual(TA);
-    +temp_atual(C);
-    !regular_temperatura(Local);
-    .send(gerenciador_ambiente, tell, status_temperatura(Local, "Estabilizado")).
-
-+!executar_comando(C, Temp_Ideal): temp_atual(TA) & TA == C <-
-    .print("Temperatura já estável em ", Local);
-    .send(gerenciador_ambiente, tell, temperatura_estavel(Local, Cultivo, C)).
-
-/* 3. Exemplo para enviar status periódico ao gerenciador 
-+!reportar_status(Local, Cultivo) : temp_atual(Temp) <-
-    .print("Enviando status ao Gerenciador: Temp atual ", Temp);
-    .send(gerenciador_ambiente, tell, status_temp(Local, Cultivo, Temp)).
-
-/* 4. Receber pedidos de status 
-+?status_temperatura(Local, Cultivo) : true <-
-    !reportar_status(Local, Cultivo).
-    */

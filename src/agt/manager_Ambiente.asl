@@ -16,7 +16,7 @@
     focus(Aid);
     !observar_ambiente.
 
-+!observar_ambiente // Melhorar implementacao aplicando periodicidade e contextos diferentes para a execucao desse plano.
++!observar_ambiente 
     <- .print("Observando o ambiente para verificar a temperatura desejada.");
     !verifica_estabilidade_sistema.
 
@@ -30,12 +30,7 @@
     //obtem_umidade_solo;
     //obtem_concentracao de CO2
     //obtem_intensidade_luminosa
-    //.wait(10000);
-    //!verifica_estabilidade_sistema. // Por que exatamente dessa sintaxe?
-    /*!ajustar_temperatura(Local);
-    .wait(10000);
-    !verifica_estabilidade_sistema.
-*/
+
 +!obtem_temperatura(Local) 
     <- .send(sensor_temp, achieve, obter_temperatura(Local)).
 
@@ -44,11 +39,11 @@
     !verifica_parametros_temp.
 
 +!verifica_parametros_temp: producao(Cultura, Local) & temp_ideal_cult(Cultura, TI)
-    <- ?dados_temperatura(Local, TA); // Alternativa ?dados_temperatura(Local1, TA)[source(sensor_temp)];
+    <- ?dados_temperatura(Local, TA); // ?dados_temperatura(Local1, TA)[source(sensor_temp)];
     .print("Local: ", Local, " - Temperatura Atual: ", TA," - Cultura: ", Cultura, " - Temperatura Ideal: ", TI);
     if (TI == TA){
         .print("Temperatura estavel");
-        -dados_temperatura(Local, TA)[source(sensor_temp)]; // Sera necessario remover essa crenca?
+        -dados_temperatura(Local, TA)[source(sensor_temp)];
     } else{
         .print("Temperatura instavel");
         !ajustar_temperatura(TA, TI);
@@ -69,8 +64,6 @@
     -temp_ambiente(TempDtt);
     +temp_ambiente(Temp).
 
-//Verfica que houve uma alteracao na temperatura deseja e entao atualiza sua base de crencas, bem como reinicia o processo de estabilizacao do sistema.
-
 // Planos de Percepcao de Signals:
 +setDesiredTemp 
     <- .print("Signal recebido: setDesiredTemp");
@@ -83,12 +76,11 @@
     <- .print("Temperatura ideal atualizada: ", TD, " - Temperatura ideal anterior: ", TI);
     if (TI \== TD){
         .print("Houve mudanca na temperatura ideal, reiniciando processo de estabilizacao do sistema");
-        -dados_temperatura("Estufa1", TI)[source(sensor_temp)]; // Talvez esse comando esteja redundante, verificar.
+        -dados_temperatura("Estufa1", TI)[source(sensor_temp)]; // redundante?
         -dados_temperatura("Estufa1", TI); 
         -temp_ideal_cult(Cultivo, TI);
         +temp_ideal_cult(Cultivo, TD);
         -temp_desejada(TI);
-        //!verifica_estabilidade_sistema;
         ?producao(Cultivo, Local);
         !obtem_temperatura(Local);
     } else {
