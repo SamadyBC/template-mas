@@ -46,18 +46,14 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     .wait(1000);
     -temp_atual(Temp);
     +temp_atual(Temp + C);
-    .print("Temperatura estabilizada");
     atualizarTempAmbienteInterface(Temp + C).
-    //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
 +!resfriar(C): temp_atual(Temp) <- ligar;
     .print("Resfriando");
     .wait(1000);
     -temp_atual(Temp);
     +temp_atual(Temp - C);
-    .print("Temperatura estabilizada");
     atualizarTempAmbienteInterface(Temp - C).
-    //Aqui havera modificacao do ambiente devido a estabilizacao da temperatura.
 
 // Planos de Comunicao: 
 
@@ -66,21 +62,20 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
 
 +!ajustar_temperatura(Temp_Atual, Temp_Ideal): not temp_atual(_) & not temp_ideal(_)
     <- .print("Primeiro comando recebido do Gerenciador");
-    .print("Temperatura atual: ", Temp_Atual, " graus");
-    .print("Temperatura ideal: ", Temp_Ideal, " graus");
+    .print("Temperatura atual: ", Temp_Atual, " - Temperatura Ideal: ", Temp_Ideal);
     +temp_atual(Temp_Atual);
     +temp_ideal(Temp_Ideal);
     !executar_comando.
 
 +!ajustar_temperatura(Temp_Atual, Temp_Ideal): temp_atual(TA) & temp_ideal(TI)
-    <- .print("Comando recebido do Gerenciador");
-    .print("Temperatura atual recebida: ", Temp_Atual, " - Temperatura Atual Armazenada: ", TA);
-    .print("Temperatura ideal recebida: ", Temp_Ideal, " - Temperatura Ideal Armazenada: ", TI);
+    <- .print("Temperatura atual recebida: ", Temp_Atual, " - Temperatura Atual Armazenada: ", TA, " - Temperatura ideal recebida: ", Temp_Ideal, " - Temperatura Ideal Armazenada: ", TI);
     if (Temp_Atual \== TA){
+        .print("Atualizando temperatura atual");
         -temp_atual(TA);
-        +temp_atual(Temp_Atual);
+        +temp_atual(Temp_Atual); // Talvez nao seja necessario atualizar a temperatura atual, pois ela sera atualizada no plano de estabilizacao da temperatura
     };
     if(Temp_Ideal \== TI){
+        .print("Atualizando temperatura ideal");
         -temp_ideal(TI);
         +temp_ideal(Temp_Ideal);
     };
@@ -90,35 +85,7 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     <- .print("Proxima etapa: regular temp");
     !regular_temperatura; // Verificar a necessidade de enviar o local junto ao comando de estabilizacao de temperatura
     ?temp_atual(TempAtt);
-    .print("Temperatura Regulada em: ", TempAtt, " graus celsius");
+    .print("Enviando dados - Temperatura: ", TempAtt);
     .send(gerenciador_ambiente, tell, status_temp("Estabilizado", TempAtt)).
 
 +!executar_comando <- .print("nao contem informacao de TA e TI").
-/* 2. Executar comando recebido 
-+!executar_comando(C, Temp_Ideal): not temp_atual(_) <-
-    .print("Inicialmente sem informacao de Temperatura");
-    +temp_atual(C);
-    !regular_temperatura(Local);
-    .send(gerenciador_ambiente, tell, status_temperatura(Local, "Estabilizado")).
-
-
-+!executar_comando(C, Temp_Ideal): temp_atual(TA) & TA \== C <-
-    .print("Temperatura medida", C, " Temperatura armazenada", TA);
-    -temp_atual(TA);
-    +temp_atual(C);
-    !regular_temperatura(Local);
-    .send(gerenciador_ambiente, tell, status_temperatura(Local, "Estabilizado")).
-
-+!executar_comando(C, Temp_Ideal): temp_atual(TA) & TA == C <-
-    .print("Temperatura já estável em ", Local);
-    .send(gerenciador_ambiente, tell, temperatura_estavel(Local, Cultivo, C)).
-
-/* 3. Exemplo para enviar status periódico ao gerenciador 
-+!reportar_status(Local, Cultivo) : temp_atual(Temp) <-
-    .print("Enviando status ao Gerenciador: Temp atual ", Temp);
-    .send(gerenciador_ambiente, tell, status_temp(Local, Cultivo, Temp)).
-
-/* 4. Receber pedidos de status 
-+?status_temperatura(Local, Cultivo) : true <-
-    !reportar_status(Local, Cultivo).
-    */
