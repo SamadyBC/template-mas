@@ -48,7 +48,7 @@
     .print("Local: ", Local, " - Temperatura Atual: ", TA," - Cultura: ", Cultura, " - Temperatura Ideal: ", TI);
     if (TI == TA){
         .print("Temperatura estavel");
-        //-dados_temperatura(Local, TA)[source(sensor_temp)]; // Sera necessario remover essa crenca?
+        -dados_temperatura(Local, TA)[source(sensor_temp)]; // Sera necessario remover essa crenca?
     } else{
         .print("Temperatura instavel");
         !ajustar_temperatura(TA, TI);
@@ -63,8 +63,10 @@
 +status_temp(Estado, Temp): local(Local) & dados_temperatura(Local, TempDtt) 
     <- .print("Local: ", Local, ": ", Estado, " - Temperatura Atual: ", Temp, " - Temperatura anterior: ", TempDtt);
     -dados_temperatura(Local, TempDtt)[source(sensor_temp)];
+    -dados_temperatura(Local, Temp)[source(self)];
     +dados_temperatura(Local, Temp);
     -status_temp(Estado, Temp)[source(atuador_temp)];
+    -temp_ambiente(TempDtt);
     +temp_ambiente(Temp).
 
 //Verfica que houve uma alteracao na temperatura deseja e entao atualiza sua base de crencas, bem como reinicia o processo de estabilizacao do sistema.
@@ -74,18 +76,21 @@
     <- .print("Signal recebido: setDesiredTemp");
     +signal(true);
     ?temperatura_desejada(TempDtt);
-    .print("Nova temperatura desejada: ", TempDtt);
     +temp_desejada(TempDtt);
     !verifica_mudanca_temp_ideal.
 
 +!verifica_mudanca_temp_ideal: temp_ideal_cult(Cultivo, TI) & temp_desejada(TD)
-    <- .print("Verificando se houve mudanca na temperatura ideal", TI, " e temperatura desejada ", TD);
+    <- .print("Temperatura ideal atualizada: ", TD, " - Temperatura ideal anterior: ", TI);
     if (TI \== TD){
         .print("Houve mudanca na temperatura ideal, reiniciando processo de estabilizacao do sistema");
-        -dados_temperatura("Estufa1", TI)[source(sensor_temp)];
+        -dados_temperatura("Estufa1", TI)[source(sensor_temp)]; // Talvez esse comando esteja redundante, verificar.
+        -dados_temperatura("Estufa1", TI); 
         -temp_ideal_cult(Cultivo, TI);
         +temp_ideal_cult(Cultivo, TD);
-        !verifica_estabilidade_sistema;
+        -temp_desejada(TI);
+        //!verifica_estabilidade_sistema;
+        ?producao(Cultivo, Local);
+        !obtem_temperatura(Local);
     } else {
         .print("Temperatura ideal nao alterada, mantendo processo de estabilizacao do sistema");
     }.

@@ -23,28 +23,31 @@
 
 +!obter_dados_sensorTemp: temperatura_ambiente(TA) & not signal(_)
     <- .print("Leitura sensor de temperatura sem signal: ", TA); // Adicionar IF aqui para primeira execucao e para as demais execucoes
-    +temp_ambiente_medida(TA);
+    //+temp_ambiente_medida(TA);
     +temp_ambiente(TA).
 
 +!obter_dados_sensorTemp: temperatura_ambiente(TA) & signal(Teste)
     <- .print("Leitura sensor de temperatura com signal: ", TA); // Adicionar IF aqui para primeira execucao e para as demais execucoes
-    +temp_ambiente_medida(TA);
+    //+temp_ambiente_medida(TA);
     //-temp_ambiente(_);
     +temp_ambiente(TA).
 
 +!obter_temperatura(Local): temp_ambiente(_) // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
     <- .print("Comando recebido do Gerenciador");
-    .print("Verficar temperatura em: ", Local);
+    //-temp_ambiente_medida(_);
+    -temp_ambiente(_);
     !executar_comando(Local).
 
 +!obter_temperatura(Local): not temp_ambiente(_) <- // Implementar: caso de uso - primeiro comando enviado e demais comandos enviados
     .print("Primeiro comando recebido do Gerenciador");
-    .print("Verficar temperatura em: ", Local);
     !executar_comando(Local).
 
 // Planos de Comunicao:
 +!executar_comando(Local): temp_ambiente(TA) // Como retornar esse dado depois de chamar o plano medir temperatura?
     <- !obter_dados_sensorTemp;
+    // Aqui deve ser levado em considercao a temperatura armazenada na crenca temperatura_ambiente
+    ?temp_ambiente(TA);
+    //?temp_ambiente_medida(TA2);
     .print("Temperatura anterior: ", TA, " graus em ", Local);
     .send(gerenciador_ambiente, tell, dados_temperatura(Local, TA)).
 
@@ -60,4 +63,5 @@
     <- .print("Signal recebido: setAmbientTemp");
     +signal(true);
     -temp_ambiente(_);
+    //-temp_ambiente_medida(_);
     !executar_comando("Estufa1").

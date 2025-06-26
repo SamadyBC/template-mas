@@ -70,9 +70,7 @@ temperatura_estavel(Graus) :- temp_atual(Temp_Atual) & temp_ideal(Temp_Ideal) & 
     !executar_comando.
 
 +!ajustar_temperatura(Temp_Atual, Temp_Ideal): temp_atual(TA) & temp_ideal(TI)
-    <- .print("Comando recebido do Gerenciador");
-    .print("Temperatura atual recebida: ", Temp_Atual, " - Temperatura Atual Armazenada: ", TA);
-    .print("Temperatura ideal recebida: ", Temp_Ideal, " - Temperatura Ideal Armazenada: ", TI);
+    <- .print("Temperatura atual recebida: ", Temp_Atual, " - Temperatura Atual Armazenada: ", TA, " - Temperatura ideal recebida: ", Temp_Ideal, " - Temperatura Ideal Armazenada: ", TI);
     if (Temp_Atual \== TA){
         .print("Atualizando temperatura atual");
         -temp_atual(TA);
