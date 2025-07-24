@@ -23,6 +23,29 @@
   <-  .print("Alguém mexeu na FECHADURA e DESTRANCOU a porta!").
       
 +closed  <-  .print("Close event from GUIInterface").
+
++pessoa_reconhecida(P, L)
+  <- .print("Pessoa reconhecida: ", P, " no local ", L);
+    .send(fechadura, tell, pessoa_reconhecida(P, L));
+	.send(fechadura, tell, pessoa_reconhecida(P, L));
+    !destrancar_porta;
+    !abrir_porta.
+
++!destrancar_porta: trancada(false)
+  <- .print("Porta já está destrancada!").
+
++!destrancar_porta: trancada(true)
+  <- destrancar;
+     .print("DESTRANQUEI a porta!");
+     !destrancar_porta.
+
++!abrir_porta: fechada(false)
+  <- .print("Porta já está aberta!").
+
++!abrir_porta: fechada(true)
+  <- abrir;
+     .print("ABRI a porta!");
+     !abrir_porta.
    
 +!fechar_porta: fechada(true)
  	<-  .print("Porta Fechada!");

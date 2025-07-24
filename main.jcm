@@ -11,65 +11,38 @@
 
 mas main {
 
-    /*agent alice: comunicacao.asl {
-      beliefs: valor(cerveja, 10)
-      //goals: dizer(preco(cerveja,10), bob)
-    }
+    // agent sensor_temp: sensor_Temperature.asl{
+    //   goals: configuracao_inicial
+    // }
 
-    agent bob: comunicacao.asl {
-      goals: //dizer(preco(arroz,35), alice)
-      //pedir_valor(cerveja, alice)
-      //dizer(ola, alice)
-
-    }
-
-    agent brasileiro: emissor.asl {
-      beliefs: idioma("Portugues"), cumprimento("Portugues", "Ola"), learn("portuguese", "Ola")
-      goals: comunicar
-    }
-
-    agent ingles: receptor.asl {
-      beliefs: idioma("Ingles"), cumprimento("Ingles", "Hello")
-    }
-
-    agent espanhol: receptor.asl {
-      beliefs: idioma("Espanhol"), cumprimento("Espanhol", "Holla")
-    }
-
-    agent alemao: receptor.asl {
-      beliefs: idioma("Alemao"), cumprimento("Alemao", "Hallo")
-    }
-
-    agent italiano: receptor.asl {
-      beliefs: idioma("Italiano"), cumprimento("Italiano", "Ciao")
-    }    
+    // agent atuador_temp: controller_Temperature.asl {
+    //   goals: configuracao_inicial
+    // }
     
-    */
-
-    agent sensor_temp: sensor_Temperature.asl{
-      // beliefs: temp_ambiente(33)
-      goals: configuracao_inicial  // Este objetivo estara conectado ao ambiente - uma janela onde sera possivel alterar o valor da temperatura. - medir_temperatura
-    }
-/**/
-    agent atuador_temp: controller_Temperature.asl {
-      //beliefs: producao("Morango", "Estufa1"), producao("Alface", "Estufa2")
-      goals: configuracao_inicial
-    } //regular_temperatura("Estufa1") temp_ideal("Morango", 19), temp_ideal("Alface", 21),
+    // agent gerenciador_ambiente: manager_Ambiente.asl{
+    //   beliefs: local("Estufa1"), producao("Morango", "Estufa1"), temp_ideal_cult("Morango", 19)
+    //   goals: configuracao_inicial
+    // }
     
+    // workspace w1 {
+    //   artifact tc: artifacts.Temperature_Controller()
+    // }
 
-
-    agent gerenciador_ambiente: manager_Ambiente.asl{
-      beliefs: local("Estufa1"), producao("Morango", "Estufa1"), temp_ideal_cult("Morango", 19)
-      goals: configuracao_inicial
+    agent camera: camera.asl{
+        beliefs: pessoa_autorizada("Jonas")
     }
+    agent fechadura: fechadura.asl
 
-    /*workspace w {
-      artifact ac: artifacts.ArCondicionado() 
-    }*/
-    
-    workspace w1 {
-      artifact tc: artifacts.Temperature_Controller()
-      //agents: sensor_temp, atuador_temp, gerenciador_ambiente
-    }
+
+
+
+    // workspace w2{
+    //   artifact ac: artifacts.ArCondicionado()
+    //   artifact ac2: artifacts.Camera()
+    //   artifact ac3: artifacts.Cortina()
+    //   artifact ac4: artifacts.Fechadura()
+    //   artifact ac5: artifacts.Lampada()
+    //   artifact ac6: artifacts.SensorIluminacao()
+    // }
 
 }
