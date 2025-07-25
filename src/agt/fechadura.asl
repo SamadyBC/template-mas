@@ -24,13 +24,27 @@
       
 +closed  <-  .print("Close event from GUIInterface").
 
-+pessoa_reconhecida(P, L)
++pessoa_reconhecida(P, L) : L == "frente"
   <- .print("Pessoa reconhecida: ", P, " no local ", L);
-    .send(ar_condicionado, tell, pessoa_reconhecida(P, L));
-	  .send(lampada, tell, pessoa_reconhecida(P, L));
-    .send(cortina, tell, pessoa_reconhecida(P, L));
-    !destrancar_porta;
-    !abrir_porta.
+     .send(ar_condicionado, tell, pessoa_reconhecida(P, L));
+     .send(lampada, tell, pessoa_reconhecida(P, L));
+     .send(cortina, tell, pessoa_reconhecida(P, L));
+     !destrancar_porta;
+     !abrir_porta.
+
++pessoa_reconhecida(P, L) : L == "saida"
+  <- .print("Pessoa saindo: ", P, " no local ", L);
+     .send(ar_condicionado, tell, pessoa_reconhecida(P, L));
+     .send(lampada, tell, pessoa_reconhecida(P, L));
+     .send(cortina, tell, pessoa_reconhecida(P, L));
+     .wait(5000);
+     !fechar_porta;
+     !trancar_porta.
+
++intruso_detectado(P, L)
+  <- .print("ALERTA DE SEGURANCA: Intruso ", P, " detectado no ", L);
+     !trancar_porta;
+     .print("Porta trancada para impedir fuga do intruso").
 
 +!destrancar_porta: trancada(false)
   <- .print("Porta está destrancada!").

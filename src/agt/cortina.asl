@@ -13,9 +13,37 @@ cortina_de_preferencia("Jonas", 60).
       
 +closed  <-  .print("Close event from GUIInterface").
 
-+pessoa_reconhecida(P, L)
++pessoa_reconhecida(P, L) : L == "frente"
   <- .print("Recebi ordens de ajustar cortina baseado em usuario: ", P);
      !verificar_preferencia_cortina(P).
+
++pessoa_reconhecida(P, L) : L == "saida"
+  <- .print("Pessoa saindo: ", P, " no local ", L);
+     !fechar_cortina_completamente.
+
++intruso_detectado(P, L)
+  <- .print("ALERTA DE SEGURANCA: Intruso ", P, " detectado no ", L);
+     !ativar_modo_defesa_cortina.
+
++!ativar_modo_defesa_cortina
+  <- !fechar_cortina_defesa;
+     .print("Cortinas fechadas para reduzir visibilidade do intruso").
+
++!fechar_cortina_defesa : nivel_abertura(NivelAtual) & NivelAtual > 0
+  <- diminuir_nivel;
+     .print("Fechando cortina - modo defesa...");
+     !fechar_cortina_defesa.
+
++!fechar_cortina_defesa : nivel_abertura(0)
+  <- .print("Cortina completamente fechada - Intruso no escuro").
+
++!fechar_cortina_completamente : nivel_abertura(NivelAtual) & NivelAtual > 0
+  <- diminuir_nivel;
+     .print("Fechando cortina...");
+     !fechar_cortina_completamente.
+
++!fechar_cortina_completamente : nivel_abertura(0)
+  <- .print("Cortina completamente fechada").
 
 +!verificar_preferencia_cortina(P) : cortina_de_preferencia(P, NivelDesejado)
   <- .print("Preferencia encontrada para ", P, ": nivel ", NivelDesejado);

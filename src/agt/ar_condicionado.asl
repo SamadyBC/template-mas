@@ -24,9 +24,30 @@ temperatura_de_preferencia("Jonas",25).
       
 +closed  <-  .print("Close event from GUIInterface").
 
-+pessoa_reconhecida(P, L)
++pessoa_reconhecida(P, L) : L == "frente"
   <- .print("Recebi ordens de ajustar temperatura baseado em usuario: ", P);
      !verificar_preferencia_temperatura(P).
+
++pessoa_reconhecida(P, L) : L == "saida"
+  <- .print("Pessoa saindo: ", P, " no local ", L);
+     !desligar_ar_condicionado.
+
++intruso_detectado(P, L)
+  <- .print("ALERTA DE SEGURANCA: Intruso ", P, " detectado no ", L);
+     !ativar_modo_defesa_temperatura.
+
++!ativar_modo_defesa_temperatura
+  <- definir_temperatura(10);
+     .print("Temperatura definida para 10 graus - modo defesa ativo");
+     !climatizar.
+
++!desligar_ar_condicionado : ligado(true)
+  <- desligar;
+     .print("Desligando ar condicionado - pessoa saiu de casa").
+
++!desligar_ar_condicionado : ligado(false)
+  <- .print("Ar condicionado já está desligado").
+
 
 +!verificar_preferencia_temperatura(P) : temperatura_de_preferencia(P, TP)
   <- .print("Preferencia encontrada para ", P, ": ", TP, " graus");
