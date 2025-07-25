@@ -139,8 +139,7 @@ Este sistema implementa uma casa inteligente usando a linguagem Jason com múlti
    - Testar pessoa não autorizada no "interior"
 
 ### Observacao:
-
-    O fluxo de execução do projeto está bem definido, porém a implementação foi pensada de maneira linear. O gatilho para o processo é o envio do movimento através da interface gráfica. Qualquer alteração nesse fluxo não foi implementada por falta de tempo.
+ O fluxo de execução do projeto está bem definido, porém a implementação foi pensada de maneira linear. O gatilho para o processo é o envio do movimento através da interface gráfica. Qualquer alteração nesse fluxo não foi implementada por falta de tempo.
 
 ### Tecnologias Utilizadas:
 
