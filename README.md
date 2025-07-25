@@ -134,8 +134,8 @@ Este sistema implementa uma casa inteligente usando a linguagem Jason com múlti
 3. **Simulação via Interface**: Usar interfaces gráficas dos artefatos para simular detecções
 4. **Observação de Logs**: Acompanhar prints dos agentes para verificar coordenação
 5. **Teste de Cenários**:
-   - Testar pessoa autorizada na "frente"
-   - Testar pessoa autorizada na "saida"
+   - Testar pessoa autorizada "Jonas" na "frente"
+   - Testar pessoa autorizada "Jonas" na "saida"
    - Testar pessoa não autorizada no "interior"
 
 ### Observacao:
