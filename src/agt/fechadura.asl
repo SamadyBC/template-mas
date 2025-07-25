@@ -26,13 +26,14 @@
 
 +pessoa_reconhecida(P, L)
   <- .print("Pessoa reconhecida: ", P, " no local ", L);
-    .send(fechadura, tell, pessoa_reconhecida(P, L));
-	.send(fechadura, tell, pessoa_reconhecida(P, L));
+    .send(ar_condicionado, tell, pessoa_reconhecida(P, L));
+	  .send(lampada, tell, pessoa_reconhecida(P, L));
+    .send(cortina, tell, pessoa_reconhecida(P, L));
     !destrancar_porta;
     !abrir_porta.
 
 +!destrancar_porta: trancada(false)
-  <- .print("Porta já está destrancada!").
+  <- .print("Porta está destrancada!").
 
 +!destrancar_porta: trancada(true)
   <- destrancar;
@@ -40,7 +41,7 @@
      !destrancar_porta.
 
 +!abrir_porta: fechada(false)
-  <- .print("Porta já está aberta!").
+  <- .print("Porta está aberta!").
 
 +!abrir_porta: fechada(true)
   <- abrir;

@@ -33,6 +33,14 @@ mas main {
     }
     agent fechadura: fechadura.asl
 
+    agent ar_condicionado: ar_condicionado.asl{
+        //beliefs: temperatura_de_preferencia("Jonas", 24)
+    }
+
+    agent lampada: lampada.asl
+
+    agent cortina: cortina.asl
+
 
 
 

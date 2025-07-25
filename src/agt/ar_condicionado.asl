@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-temperatura_de_preferencia(jonas,25).
+temperatura_de_preferencia("Jonas",25).
 
 /* Initial goals */
 
@@ -11,8 +11,9 @@ temperatura_de_preferencia(jonas,25).
 +!inicializar_AC
   <- 	makeArtifact("ac_quarto","artifacts.ArCondicionado",[],D);
   	   	focus(D);
-  	   	!definir_temperatura;
-  	   	!!climatizar.
+		.print("Inicializado ar condicionado!").
+  	   	//!definir_temperatura;
+  	   	//!!climatizar.
 
 +alterado : temperatura_ambiente(TA) & temperatura_ac(TAC)
   <-  .drop_intention(climatizar);
@@ -22,9 +23,22 @@ temperatura_de_preferencia(jonas,25).
   	  !!climatizar.
       
 +closed  <-  .print("Close event from GUIInterface").
+
++pessoa_reconhecida(P, L)
+  <- .print("Recebi ordens de ajustar temperatura baseado em usuario: ", P);
+     !verificar_preferencia_temperatura(P).
+
++!verificar_preferencia_temperatura(P) : temperatura_de_preferencia(P, TP)
+  <- .print("Preferencia encontrada para ", P, ": ", TP, " graus");
+     definir_temperatura(TP);
+     !climatizar.
+
++!verificar_preferencia_temperatura(P) : not temperatura_de_preferencia(P, _)
+  <- .print("Nenhuma preferencia encontrada para ", P, ". Mantendo temperatura atual").
+
    
  +!definir_temperatura: temperatura_ambiente(TA) & temperatura_ac(TAC) 
- 			& temperatura_de_preferencia(User,TP) & TP \== TD & ligado(false)
+ 			& temperatura_de_preferencia(User,TP) & TP \== TA & ligado(false)
  	<-  definir_temperatura(TP);
  		.print("Definindo temperatura baseado na preferência do usuário ", User);
  		.print("Temperatura: ", TP).
